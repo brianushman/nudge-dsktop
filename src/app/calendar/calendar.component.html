@@ -1,0 +1,13 @@
+<div class="card-container">
+    <a class="card" target="_blank" rel="noopener">
+        <i class="fa fa-chevron-circle-left fa-2x"></i>
+    </a>
+
+    <li *ngFor="let date of visibleDates">
+        <a class="card" target="_blank" rel="noopener" [ngClass]="{'btn btn-primary': isSelected(date)}">{{date.format('ddd Do')}}</a>
+    </li>
+
+    <a class="card" target="_blank" rel="noopener">
+        <i class="fa fa-chevron-circle-right fa-2x"></i>
+    </a>
+</div>

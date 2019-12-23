@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as moment from 'moment';
+import * as uuid from 'uuid';
 import { NudgeTracker } from '../models/nudge-tracker';
 import { Observable } from 'rxjs/internal/Observable';
 
@@ -25,8 +26,64 @@ export class nudgeSource {
 
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/188407/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }
-    public getDataFake():NudgeTracker[] {
-        return null;
+    public updateQuantity(tracker:NudgeTracker, quantity:number, notes:string) {
+        
+    }
+
+    public updateTrackerText(tracker:NudgeTracker, text:string) {
+        var timestamp = moment();
+        const headers = new HttpHeaders()
+            .set("Accept", "application/json")
+            .set("x-api-token", "a0fcad7865c76a4f4428c06a8699afcb")
+            .set("x-api-key", "1ccb73d4c689414294cf951fd29a4eee5cdc8770")
+            .set("Accept-Language", "en-us")
+            .set("x-requested-with", "XMLHttpRequest")
+            .set("Set-Cookie", `laravel_session=${this.cookie}`)
+
+        let data:IHttpPostTracker = {
+            id: uuid.v4(),
+            serverId: null,
+            trackerId: tracker.id,
+            trackerType: "custom-question",
+            source: "nudge",
+            via: null,
+            userTime: timestamp.format('YYYY-MM-DDTHH:mm:ss') + '.000Z',
+            isUntimedActivity: false,
+            notes: null,
+            distance: null,
+            duration: null,
+            hiDuration: null,
+            quantity: null,
+            bloodGlucose: null,
+            systolic: null,
+            diastolic: null,
+            calories: null,
+            carbohydrates: null,
+            fat: null,
+            fiber: null,
+            protein: null,
+            sodium: null,
+            fatRatio: null,
+            weight: null,
+            response: text,
+            activityId: null,
+            isCrossedOut: false,
+            users_id: tracker.user.id,
+            user_time: timestamp.format('YYYY-MM-DD HH:mm:ss'),
+            hi_duration: null,
+            fat_ratio: null,
+            blood_glucose: null,
+            activity_id: null
+        }
+
+        if(tracker.user.logs.length == 0) {
+            return this.http.post(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs`, data, {headers});
+        }
+        else {
+            data.id = tracker.user.logs[0].id.toString();
+            data.serverId = tracker.user.logs[0].id;
+            return this.http.put<NudgeTracker[]>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs/${data.id}`, data, {headers});
+        }
     }
 
 }

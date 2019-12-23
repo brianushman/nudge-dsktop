@@ -42,4 +42,10 @@ export class DataDisplayComponent implements OnInit {
     return tracker.user.logs.length > 0 ? tracker.user.logs[0].response : null;
   }
 
+  updateTextField(tracker:NudgeTracker, text:string) {
+    this.nudgeSrc.updateTrackerText(tracker, text).subscribe(data => {
+      console.debug(data);
+    });
+  }
+
 }

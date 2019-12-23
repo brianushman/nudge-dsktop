@@ -2,6 +2,6 @@
 <div class="col-sm-10">
     <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
         <label>{{tracker.name}}</label>
-        <textarea style="resize: none;" placeholder="no text entered yet...">{{getTextFieldText(tracker)}}</textarea>
+        <textarea style="resize: none;" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>
     </div>
 </div>

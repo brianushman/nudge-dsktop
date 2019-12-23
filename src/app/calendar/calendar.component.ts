@@ -8,18 +8,34 @@ import * as moment from 'moment';
 })
 export class CalendarComponent implements OnInit {
 
-  visibleDates: moment.Moment[];
-  selectedDate: moment.Moment;
+  visibleDates: Date[];
+  selectedDate: Date;
 
   constructor() { }
 
   ngOnInit() {
     this.generateDateList(moment().toDate(), true);
-    this.selectedDate = this.visibleDates[this.visibleDates.length - 1];
+    this.selectedDate = this.getLastVisibleDate();
   }
 
-  isSelected(date:moment.Moment):boolean {
-    return this.selectedDate == date;
+  formatDate(date:Date, format:string):string {
+    return moment(date).format(format);
+  }
+
+  isSelected(date:Date):boolean {
+    return this.selectedDate.getDate() == date.getDate();
+  }
+
+  changeSelectedDate(date:Date):void {
+    this.selectedDate = date;
+  }
+
+  getLastVisibleDate() : Date {
+    return this.visibleDates[this.visibleDates.length - 1];
+  }
+
+  getFirstVisibleDate() : Date {
+    return this.visibleDates[0];
   }
 
   generateDateList(date:Date, isLastDate:boolean) {
@@ -28,8 +44,17 @@ export class CalendarComponent implements OnInit {
     this.visibleDates = [];
 
     for (let i = 0; i < 7; i++) {
-      this.visibleDates.push(moment(startDate).add(i, 'days'));
+      this.visibleDates.push(moment(startDate).add(i, 'days').toDate());
     }
   }
 
+  changeDateByDays(numDays:number):void {
+    let newDate = moment(this.getLastVisibleDate());
+    newDate.add(numDays, 'days');
+    this.generateDateList(newDate.toDate(), true);
+  }
+
+  changeDateByDate(date:Date):void {
+    this.generateDateList(moment(date).toDate(), false);
+  }
 }

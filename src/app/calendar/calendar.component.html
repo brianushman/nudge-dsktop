@@ -1,13 +1,15 @@
 <div class="card-container">
-    <a class="card" target="_blank" rel="noopener">
+    <label role="button" style="color: #0062cc" class="card" target="_blank" rel="noopener" (click)="changeDateByDays(-1)">
         <i class="fa fa-chevron-circle-left fa-2x"></i>
-    </a>
+    </label>
 
-    <li *ngFor="let date of visibleDates">
-        <a class="card" target="_blank" rel="noopener" [ngClass]="{'btn btn-primary': isSelected(date)}">{{date.format('ddd Do')}}</a>
-    </li>
+    <div class="btn-group">
+        <label role="button" *ngFor="let date of visibleDates" style="justify-content: space-around;" (click)="changeSelectedDate(date)">
+            <a class="card" target="_blank" rel="noopener" [ngClass]="{'btn btn-primary active': isSelected(date)}">{{formatDate(date, 'ddd Do')}}</a>
+        </label>
+    </div>
 
-    <a class="card" target="_blank" rel="noopener">
+    <label role="button" style="color: #0062cc" class="card" target="_blank" rel="noopener" (click)="changeDateByDays(1)">
         <i class="fa fa-chevron-circle-right fa-2x"></i>
-    </a>
+    </label>
 </div>

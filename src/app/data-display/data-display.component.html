@@ -1,0 +1,7 @@
+<div class="col-sm-2"></div>
+<div class="col-sm-10">
+    <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
+        <label>{{tracker.name}}</label>
+        <textarea style="resize: none;" placeholder="no text entered yet...">{{getTextFieldText(tracker)}}</textarea>
+    </div>
+</div>

@@ -81,7 +81,6 @@
     border: 1px solid #eee;
     background-color: #fafafa;
     height: 40px;
-    margin: 0 8px 16px;
     padding: 16px;
     display: flex;
     flex-direction: row;
@@ -197,7 +196,7 @@
   }
 
   .circle-link:hover {
-    transform: translateY(-0.25rem);
+    transform: translateX(-5.25rem);
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   }
 
@@ -276,4 +275,28 @@
       display: none;
       visibility: hidden;
     }
+  }
+
+  .text-field {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+  }
+
+  .text-field > label {
+    height: 24%;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: 'Annie Use Your Telescope', cursive;;
+  }
+
+  .text-field > textarea {
+    height: 80%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 20px;
+    font-family: 'Annie Use Your Telescope', cursive;;
+    vertical-align: text-bottom;
   }

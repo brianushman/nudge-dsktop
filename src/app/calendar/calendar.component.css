@@ -1,0 +1,12 @@
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header:hover {
+    color: #0062cc;
+    cursor: pointer;
+    transform: translateY(-3px);
+}

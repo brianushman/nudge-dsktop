@@ -17,14 +17,11 @@ export class nudgeSource {
 
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
-            .set("Connection", "keep-alive")
             .set("x-api-token", "a0fcad7865c76a4f4428c06a8699afcb")
             .set("x-api-key", "1ccb73d4c689414294cf951fd29a4eee5cdc8770")
             .set("Accept-Language", "en-us")
-            .set("User-Agent", "Nudge/4053 CFNetwork/1121.2.2 Darwin/19.2.0")
-            .set("Accept-Encoding", "gzip, deflate, br")
             .set("x-requested-with", "XMLHttpRequest")
-            .set("Set-Cookie", "laravel_session=eyJpdiI6InpYejFjaG9JZWJlZlJJZmJNUnBlZ2c9PSIsInZhbHVlIjoiSVdxK1p2ZVwvazlleHlFQVkydTVIU3pFZHhZZ3NwNTdlWklVRTRmWnU1SmE3N1ZtN3ZrXC9sUkxpRlwvZXZqVmtzc0ZYd3lXUWRJZEN0aHRxZkRCUThSVHc9PSIsIm1hYyI6IjRjNjdlODc0YzBkZGI3MmNjZTk4NzBiMjEyZDFlY2Y1YmY1NjIwNmM2NGNhZTFjNDEwZjhmNWU3MTY4NjIzOTYifQ%3D%3D")
+            .set("Set-Cookie", `laravel_session=${this.cookie}`)
 
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/188407/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }

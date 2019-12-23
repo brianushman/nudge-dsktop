@@ -8,6 +8,8 @@ import { CalendarModule } from './calendar/calendar.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DataDisplayComponent } from './data-display/data-display.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { DataDisplayComponent } from './data-display/data-display.component';
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    CalendarModule
+    CalendarModule,
+    BsDatepickerModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

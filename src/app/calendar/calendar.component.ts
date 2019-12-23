@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
+import { CalendarService } from './calendar.service';
+import { BsDatepickerDirective, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-calendar',
@@ -7,15 +9,28 @@ import * as moment from 'moment';
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
+  @ViewChild(BsDatepickerDirective, { static: false }) datepicker: BsDatepickerDirective;
 
   visibleDates: Date[];
   selectedDate: Date;
+  datepickerDate: Date;
+  bsConfig: Partial<BsDatepickerConfig>;
 
-  constructor() { }
+  constructor(private calendarService: CalendarService) { }
 
-  ngOnInit() {
+  ngOnInit() {   
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue' });     
+    this.calendarService.date.subscribe(newDate => {
+      this.selectedDate = newDate;
+      this.datepickerDate = newDate;
+    });
+
     this.generateDateList(moment().toDate(), true);
-    this.selectedDate = this.getLastVisibleDate();
+    this.calendarService.updateDate(this.getLastVisibleDate());
+  }
+
+  showDatePicker() {
+    this.datepicker.show();
   }
 
   formatDate(date:Date, format:string):string {
@@ -27,7 +42,8 @@ export class CalendarComponent implements OnInit {
   }
 
   changeSelectedDate(date:Date):void {
-    this.selectedDate = date;
+    if(date == null) return;
+    this.calendarService.updateDate(date);
   }
 
   getLastVisibleDate() : Date {
@@ -56,5 +72,6 @@ export class CalendarComponent implements OnInit {
 
   changeDateByDate(date:Date):void {
     this.generateDateList(moment(date).toDate(), false);
+    this.changeSelectedDate(date);
   }
 }

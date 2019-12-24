@@ -25,13 +25,38 @@
     height: 32px;
     font-size: 26px;
     font-weight: bold;
-    font-family: 'Annie Use Your Telescope', cursive;;
+    font-family: 'Annie Use Your Telescope', cursive;
   }
 
   .text-field > textarea {
     border: none;
     border-bottom: 1px solid #ccc;
     font-size: 20px;
-    font-family: 'Annie Use Your Telescope', cursive;;
+    font-family: 'Annie Use Your Telescope', cursive;
     vertical-align: text-bottom;
+  }
+
+  .circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 50px;
+    text-align: center;
+    font-family: 'Annie Use Your Telescope', cursive;
+    color: white;
+    background-color: blue;
+  }
+
+  .btn-block {
+    display: flex;
+  }
+
+  .btn-block > span {
+    font-weight: bold;
+    font-size: 22px;
+    align-self: center;
+    flex-grow: 1;
+    font-family: 'Annie Use Your Telescope', cursive;
   }

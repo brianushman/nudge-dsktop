@@ -31,6 +31,7 @@ export class NudgeUserDataLog {
     id: number;
     users_id: number;
     response: string;
+    quantity: number;
     notes: string;
     user_time: string;
     source: string;

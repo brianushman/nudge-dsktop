@@ -62,6 +62,15 @@
     min-width: 30%;
     position: relative;
   }
+  
+  .card.arrows {
+    color: #0062cc
+  }
+
+  .card.arrows:hover {
+    color: white;
+    background-color: #0062cc;
+  }
 
   /* Responsive Styles */
   @media screen and (max-width: 767px) {

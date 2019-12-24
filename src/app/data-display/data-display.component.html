@@ -1,17 +1,15 @@
-<div class="col-sm-3">
-    <accordion [isAnimated]="true">
-        <accordion-group heading="Static Header, initially expanded" [panelClass]="customClass" [isOpen]="isFirstOpen">
-            This content is straight in the template.
-        </accordion-group>
-        <accordion-group heading="Content 1">
-            <p>accordion 1</p>
-        </accordion-group>
-        <accordion-group heading="Content 2" panelClass="customClass">
-            <p>accordion 2</p>
+<div class="col-sm-4">
+    <accordion [isAnimated]="true" [closeOthers]="true">
+        <accordion-group *ngFor="let tracker of getOrderedCounters()">
+            <button class="btn btn-block clearfix" accordion-heading type="button">
+                <div class="pull-left float-left circle">{{getCounterEnteredQuantity(tracker)}}/{{getCounterTargetQuantity(tracker)}}</div>
+                <span class="float-left pull-left">{{getCounterName(tracker)}}</span>
+            </button>
+            This is just some content to illustrate fancy headings.
         </accordion-group>
     </accordion>
 </div>
-<div class="col-sm-9">
+<div class="col-sm-8">
     <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
         <label>{{tracker.name}}</label>
         <textarea autosize minRows="1" style="resize: none;" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>

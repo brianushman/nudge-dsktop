@@ -39,8 +39,31 @@ export class DataDisplayComponent implements OnInit {
     ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
   }
 
+  getOrderedCounters() : NudgeTracker[] {
+    if(this.trackerData == null) return [];
+    return this.trackerData.filter(
+      (tracker: NudgeTracker) => 
+        this.counterType === tracker.meta.log_format &&
+        true === tracker.user.settings.enabled
+    ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
+  }
+
   getTextFieldText(tracker:NudgeTracker) {
     return tracker.user.logs.length > 0 ? tracker.user.logs[0].response : null;
+  }
+
+  getCounterTargetQuantity(tracker:NudgeTracker):number {
+    return parseInt(tracker.name.substr(0, tracker.name.indexOf(' ')));
+  }
+
+  getCounterEnteredQuantity(tracker:NudgeTracker):number {
+    return tracker.user.logs
+      .map((val, index) => { return val.quantity; })
+      .reduce(function(a,b) { return a + b;});
+  }
+
+  getCounterName(tracker:NudgeTracker):string {
+    return tracker.name.substr(tracker.name.indexOf(' '));
   }
 
   updateTextField(tracker:NudgeTracker, text:string) {

@@ -8,3 +8,30 @@
     width: 100%;
     height: 100%;
 }
+
+:host > div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.text-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+  }
+
+  .text-field > label {
+    height: 32px;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: 'Annie Use Your Telescope', cursive;;
+  }
+
+  .text-field > textarea {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 20px;
+    font-family: 'Annie Use Your Telescope', cursive;;
+    vertical-align: text-bottom;
+  }

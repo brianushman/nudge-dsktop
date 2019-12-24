@@ -19,7 +19,7 @@ interface IHttpPostTracker {
     isUntimedActivity: boolean;
     notes: string;
     protein: string;
-    quantity: string;
+    quantity: number;
     response: string;
     serverId: number;
     sodium: string;

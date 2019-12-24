@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as uuid from 'uuid';
 import { NudgeTracker } from '../models/nudge-tracker';
 import { Observable } from 'rxjs/internal/Observable';
+import { TrackerType } from '../models/TrackerTypeEnum';
 
 export class nudgeSource {
 
@@ -26,11 +27,8 @@ export class nudgeSource {
 
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/188407/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }
-    public updateQuantity(tracker:NudgeTracker, quantity:number, notes:string) {
-        
-    }
-
-    public updateTrackerText(tracker:NudgeTracker, text:string) {
+    
+    public updateTracker(tracker:NudgeTracker, trackerType: TrackerType, notes:string, quantity:number = null) {
         var timestamp = moment();
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
@@ -49,11 +47,11 @@ export class nudgeSource {
             via: null,
             userTime: timestamp.format('YYYY-MM-DDTHH:mm:ss') + '.000Z',
             isUntimedActivity: false,
-            notes: null,
+            notes: trackerType == TrackerType.Counter ? notes : null,
             distance: null,
             duration: null,
             hiDuration: null,
-            quantity: null,
+            quantity: quantity,
             bloodGlucose: null,
             systolic: null,
             diastolic: null,
@@ -65,7 +63,7 @@ export class nudgeSource {
             sodium: null,
             fatRatio: null,
             weight: null,
-            response: text,
+            response: trackerType == TrackerType.Question ? notes : null,
             activityId: null,
             isCrossedOut: false,
             users_id: tracker.user.id,

@@ -4,6 +4,7 @@ import { nudgeSource } from '../data-source/nudge-src';
 import { NudgeTracker } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
+import { TrackerType } from '../models/TrackerTypeEnum';
 
 @Component({
   selector: 'app-data-display',
@@ -43,7 +44,7 @@ export class DataDisplayComponent implements OnInit {
   }
 
   updateTextField(tracker:NudgeTracker, text:string) {
-    this.nudgeSrc.updateTrackerText(tracker, text).subscribe(data => {
+    this.nudgeSrc.updateTracker(tracker, TrackerType.Question, text).subscribe(data => {
       console.debug(data);
     });
   }

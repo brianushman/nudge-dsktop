@@ -60,3 +60,21 @@
     flex-grow: 1;
     font-family: 'Annie Use Your Telescope', cursive;
   }
+
+  .entry {
+    width: 100%;
+    display: flex;
+  }
+
+  .entry > div {
+    flex-grow: 1;
+  }
+
+  .entry > i {
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  .add-entry {
+    width: 100%
+  }

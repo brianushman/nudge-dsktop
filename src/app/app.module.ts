@@ -12,11 +12,15 @@ import { DataDisplayComponent } from './data-display/data-display.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { LogEntryModalComponent } from './log-entry-modal/log-entry-modal.component';
+import { LogEntryModalService } from './log-entry-modal/log-entry-modal.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DataDisplayComponent
+    DataDisplayComponent,
+    LogEntryModalComponent
   ],
   imports: [
     BrowserModule,
@@ -27,9 +31,10 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
     CalendarModule,
     BsDatepickerModule.forRoot(),
     BrowserAnimationsModule,
-    AccordionModule.forRoot()
+    AccordionModule.forRoot(),
+    ModalModule.forRoot()
   ],
-  providers: [],
+  providers: [LogEntryModalService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

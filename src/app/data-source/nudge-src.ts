@@ -5,7 +5,7 @@ import { NudgeTracker } from '../models/nudge-tracker';
 import { Observable } from 'rxjs/internal/Observable';
 import { TrackerType } from '../models/TrackerTypeEnum';
 
-export class nudgeSource {
+export class NudgeSource {
 
     baseUrl:string = 'https://api.nudgeyourself.com';
     http:HttpClient;

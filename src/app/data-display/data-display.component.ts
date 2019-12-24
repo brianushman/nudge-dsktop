@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef  } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { nudgeSource } from '../data-source/nudge-src';
-import { NudgeTracker } from '../models/nudge-tracker';
+import { NudgeSource } from '../data-source/nudge-src';
+import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { TrackerType } from '../models/TrackerTypeEnum';
+import { LogEntryModalService } from '../log-entry-modal/log-entry-modal.service';
 
 @Component({
   selector: 'app-data-display',
@@ -13,13 +14,28 @@ import { TrackerType } from '../models/TrackerTypeEnum';
 })
 export class DataDisplayComponent implements OnInit {
 
+  config = {
+    animated: true,
+    list: [
+      'Open a modal with component',
+      'Pass your data',
+      'Do something else',
+      '...'
+    ],
+    title: 'Modal with component'
+  };
+
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
-  nudgeSrc: nudgeSource;
+  nudgeSrc: NudgeSource;
   trackerData: NudgeTracker[];
+  title: string = 'hello world';
 
-  constructor(private http:HttpClient, private calendarService: CalendarService) {
-    this.nudgeSrc = new nudgeSource(http);
+  constructor(
+    private http:HttpClient,
+    private calendarService: CalendarService,
+    private modalService: LogEntryModalService) {
+    this.nudgeSrc = new NudgeSource(http);
   }
 
   ngOnInit() {
@@ -28,6 +44,10 @@ export class DataDisplayComponent implements OnInit {
     this.calendarService.date.subscribe(newDate => {
       this.nudgeSrc.getData(moment(newDate).toDate()).subscribe(data => this.trackerData = data);
     });
+  }
+
+  formatDate(date:Date, format:string):string {
+    return moment(date).format(format);
   }
 
   getOrderedTextFields() : NudgeTracker[] {
@@ -57,6 +77,7 @@ export class DataDisplayComponent implements OnInit {
   }
 
   getCounterEnteredQuantity(tracker:NudgeTracker):number {
+    if(tracker.user.logs.length == 0) return 0;
     return tracker.user.logs
       .map((val, index) => { return val.quantity; })
       .reduce(function(a,b) { return a + b;});
@@ -72,4 +93,26 @@ export class DataDisplayComponent implements OnInit {
     });
   }
 
+  createLogEntry(tracker:NudgeTracker) {
+    const initialState = {
+      list: [
+        'Open a modal with component',
+        'Pass your data',
+        'Do something else',
+        '...'
+      ],
+      title: 'Modal with component'
+    };
+    this.config.title = this.getCounterName(tracker);
+    //this.modalRef = this.modalService.show(template, {initialState});
+    this.modalService.showConfirm("Confirmation", "How to pass data to modal?");
+  }
+
+  editLogEntry(log:NudgeUserDataLog) {
+
+  }
+
+  deleteLogEntry(log:NudgeUserDataLog) {
+
+  }
 }

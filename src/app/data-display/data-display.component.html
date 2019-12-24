@@ -1,11 +1,18 @@
 <div class="col-sm-4">
     <accordion [isAnimated]="true" [closeOthers]="true">
-        <accordion-group *ngFor="let tracker of getOrderedCounters()">
+        <accordion-group *ngFor="let tracker of getOrderedCounters()" [isOpen]="getOrderedCounters().indexOf(tracker) == 0">
             <button class="btn btn-block clearfix" accordion-heading type="button">
                 <div class="pull-left float-left circle">{{getCounterEnteredQuantity(tracker)}}/{{getCounterTargetQuantity(tracker)}}</div>
                 <span class="float-left pull-left">{{getCounterName(tracker)}}</span>
             </button>
-            This is just some content to illustrate fancy headings.
+            <div *ngFor="let log of tracker.user.logs" class="entry">
+                <i class="fa fa-pencil" title="Edit this log entry" (click)="editLogEntry(log)"></i>
+                <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(log)"></i>
+                <div>{{log.quantity}}</div>
+                <div>{{log.notes}}</div>
+                <div>{{formatDate(log.user_time, 'hh:mm a')}}</div>
+            </div>
+            <button type="button" class="btn btn-primary add-entry" (click)="createLogEntry(tracker)"><i class="fa fa-plus-circle"></i> Add Entry</button>
         </accordion-group>
     </accordion>
 </div>

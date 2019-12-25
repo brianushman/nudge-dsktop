@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { FontAwesomeModule } from 'ngx-icons';
 import { AutosizeModule } from 'ngx-autosize';
@@ -13,28 +14,30 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { LogEntryModalComponent } from './log-entry-modal/log-entry-modal.component';
-import { LogEntryModalService } from './log-entry-modal/log-entry-modal.service';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
+import { MaterialInputComponent } from './material-input/material-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DataDisplayComponent,
-    LogEntryModalComponent
+    MaterialInputComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     FontAwesomeModule,
     AutosizeModule,
     CalendarModule,
     BsDatepickerModule.forRoot(),
     BrowserAnimationsModule,
     AccordionModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    TimepickerModule.forRoot()
   ],
-  providers: [LogEntryModalService],
+  providers: [],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

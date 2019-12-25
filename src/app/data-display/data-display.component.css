@@ -78,3 +78,7 @@
   .add-entry {
     width: 100%
   }
+
+  .fa-trash {
+    color: red;
+  }

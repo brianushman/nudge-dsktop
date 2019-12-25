@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogEntryModalComponent } from './log-entry-modal.component';
+import { MaterialInputComponent } from './material-input.component';
 
-describe('LogEntryModalComponent', () => {
-  let component: LogEntryModalComponent;
-  let fixture: ComponentFixture<LogEntryModalComponent>;
+describe('MaterialInputComponent', () => {
+  let component: MaterialInputComponent;
+  let fixture: ComponentFixture<MaterialInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LogEntryModalComponent ]
+      declarations: [ MaterialInputComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogEntryModalComponent);
+    fixture = TestBed.createComponent(MaterialInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

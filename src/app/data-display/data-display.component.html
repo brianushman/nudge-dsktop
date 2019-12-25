@@ -1,4 +1,4 @@
-<div class="col-sm-4">
+<div class="col-sm-5">
     <accordion [isAnimated]="true" [closeOthers]="true">
         <accordion-group *ngFor="let tracker of getOrderedCounters()" [isOpen]="getOrderedCounters().indexOf(tracker) == 0">
             <button class="btn btn-block clearfix" accordion-heading type="button">
@@ -6,17 +6,16 @@
                 <span class="float-left pull-left">{{getCounterName(tracker)}}</span>
             </button>
             <div *ngFor="let log of tracker.user.logs" class="entry">
-                <i class="fa fa-pencil" title="Edit this log entry" (click)="editLogEntry(log)"></i>
-                <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(log)"></i>
-                <div>{{log.quantity}}</div>
-                <div>{{log.notes}}</div>
+                <app-material-input [Name]="'Quantity'" [Width]="'60px'" [Value]="log.quantity"></app-material-input>
+                <!--app-material-input [Name]="'Notes'" [Width]="'200px'" [Value]="log.notes" [Multiline]="true"></app-material-input-->
+                <textarea id="form7" class="md-textarea form-control"></textarea>
                 <div>{{formatDate(log.user_time, 'hh:mm a')}}</div>
+                <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(log)"></i>
             </div>
-            <button type="button" class="btn btn-primary add-entry" (click)="createLogEntry(tracker)"><i class="fa fa-plus-circle"></i> Add Entry</button>
         </accordion-group>
     </accordion>
 </div>
-<div class="col-sm-8">
+<div class="col-sm-7">
     <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
         <label>{{tracker.name}}</label>
         <textarea autosize minRows="1" style="resize: none;" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>

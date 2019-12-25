@@ -5,7 +5,6 @@ import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { TrackerType } from '../models/TrackerTypeEnum';
-import { LogEntryModalService } from '../log-entry-modal/log-entry-modal.service';
 
 @Component({
   selector: 'app-data-display',
@@ -15,26 +14,17 @@ import { LogEntryModalService } from '../log-entry-modal/log-entry-modal.service
 export class DataDisplayComponent implements OnInit {
 
   config = {
-    animated: true,
-    list: [
-      'Open a modal with component',
-      'Pass your data',
-      'Do something else',
-      '...'
-    ],
-    title: 'Modal with component'
+    animated: true
   };
 
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
   nudgeSrc: NudgeSource;
   trackerData: NudgeTracker[];
-  title: string = 'hello world';
 
   constructor(
     private http:HttpClient,
-    private calendarService: CalendarService,
-    private modalService: LogEntryModalService) {
+    private calendarService: CalendarService) {
     this.nudgeSrc = new NudgeSource(http);
   }
 
@@ -93,26 +83,7 @@ export class DataDisplayComponent implements OnInit {
     });
   }
 
-  createLogEntry(tracker:NudgeTracker) {
-    const initialState = {
-      list: [
-        'Open a modal with component',
-        'Pass your data',
-        'Do something else',
-        '...'
-      ],
-      title: 'Modal with component'
-    };
-    this.config.title = this.getCounterName(tracker);
-    //this.modalRef = this.modalService.show(template, {initialState});
-    this.modalService.showConfirm("Confirmation", "How to pass data to modal?");
-  }
-
-  editLogEntry(log:NudgeUserDataLog) {
-
-  }
-
-  deleteLogEntry(log:NudgeUserDataLog) {
+  deleteLogEntry(template: TemplateRef<any>, log:NudgeUserDataLog) {
 
   }
 }

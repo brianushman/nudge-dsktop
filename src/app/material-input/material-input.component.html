@@ -1,0 +1,7 @@
+<div class="group" [style.width]="Width">      
+    <input type="text" [ngModel]="Value" required *ngIf="!Multiline">
+    <textarea *ngIf="Multiline">{{Value}}</textarea>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label>{{Name}}</label>
+</div>

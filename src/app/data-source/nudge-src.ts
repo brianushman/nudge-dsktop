@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { NudgeTracker } from '../models/nudge-tracker';
+import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { Observable } from 'rxjs/internal/Observable';
 import { TrackerType } from '../models/TrackerTypeEnum';
 
@@ -28,7 +28,7 @@ export class NudgeSource {
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/188407/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }
     
-    public updateTracker(tracker:NudgeTracker, trackerType: TrackerType, notes:string, quantity:number = null) {
+    public updateTracker(tracker:NudgeTracker, trackerType: TrackerType, quantity:number=null, notes:string=null) {
         var timestamp = moment();
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
@@ -84,4 +84,15 @@ export class NudgeSource {
         }
     }
 
+    public deleteTracker(tracker:NudgeTracker, log:NudgeUserDataLog) {
+        const headers = new HttpHeaders()
+            .set("Accept", "application/json")
+            .set("x-api-token", "a0fcad7865c76a4f4428c06a8699afcb")
+            .set("x-api-key", "1ccb73d4c689414294cf951fd29a4eee5cdc8770")
+            .set("Accept-Language", "en-us")
+            .set("x-requested-with", "XMLHttpRequest")
+            .set("Set-Cookie", `laravel_session=${this.cookie}`)
+
+        return this.http.delete<any>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs/${log.id.toString()}`, {headers})
+    }
 }

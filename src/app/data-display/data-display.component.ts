@@ -5,6 +5,7 @@ import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { TrackerType } from '../models/TrackerTypeEnum';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-data-display',
@@ -13,10 +14,6 @@ import { TrackerType } from '../models/TrackerTypeEnum';
 })
 export class DataDisplayComponent implements OnInit {
 
-  config = {
-    animated: true
-  };
-
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
   nudgeSrc: NudgeSource;
@@ -24,7 +21,8 @@ export class DataDisplayComponent implements OnInit {
 
   constructor(
     private http:HttpClient,
-    private calendarService: CalendarService) {
+    private calendarService: CalendarService,
+    private toastr: ToastrService) {
     this.nudgeSrc = new NudgeSource(http);
   }
 
@@ -78,12 +76,26 @@ export class DataDisplayComponent implements OnInit {
   }
 
   updateTextField(tracker:NudgeTracker, text:string) {
-    this.nudgeSrc.updateTracker(tracker, TrackerType.Question, text).subscribe(data => {
+    this.nudgeSrc.updateTracker(tracker, TrackerType.Question, null, text).subscribe(data => {
       console.debug(data);
     });
   }
 
-  deleteLogEntry(template: TemplateRef<any>, log:NudgeUserDataLog) {
+  createLogEntry(tracker:NudgeTracker, quantity:number) {
+    this.nudgeSrc.updateTracker(tracker, TrackerType.Counter, quantity).subscribe(data => {
+      console.debug(data);
+    });
+  }
 
+  deleteLogEntry(tracker:NudgeTracker, log:NudgeUserDataLog) {
+    this.nudgeSrc.deleteTracker(tracker, log).subscribe(
+      data => {
+        if(!data.success) this.toastr.error('Unable to remove log entry.', 'Error');
+        tracker.user.logs.splice(tracker.user.logs.indexOf(log), 1);
+      },
+      error => {
+        this.toastr.error('Unable to remove log entry.', 'Error');
+      }
+    );
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-material-input',
@@ -11,9 +12,26 @@ export class MaterialInputComponent implements OnInit {
   @Input() Width: string;
   @Input() Value: any;
   @Input() Multiline: boolean = false;
-  constructor() { }
+  @Input() Required: boolean = false;
+  @Input() Numeric: boolean = false;
+  @Input() Time: boolean = false;
+  uid:string;
+
+  constructor() {
+    this.uid = uuid.v4();
+  }
 
   ngOnInit() {
+  }
+
+  inputCtrlType() {
+    if(this.Numeric) {
+      return 'number';
+    }
+    else if(this.Time) {
+      return 'time';
+    }
+    return 'text';
   }
 
 }

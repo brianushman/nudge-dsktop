@@ -76,14 +76,42 @@ export class DataDisplayComponent implements OnInit {
   }
 
   updateTextField(tracker:NudgeTracker, text:string) {
-    this.nudgeSrc.updateTracker(tracker, TrackerType.Question, null, text).subscribe(data => {
+    this.nudgeSrc.updateTrackerQuestion(tracker, text).subscribe(data => {
       console.debug(data);
     });
   }
 
   createLogEntry(tracker:NudgeTracker, quantity:number) {
-    this.nudgeSrc.updateTracker(tracker, TrackerType.Counter, quantity).subscribe(data => {
-      console.debug(data);
+    this.nudgeSrc.createTrackerCounter(tracker, quantity).subscribe(data => {
+      tracker.user.logs.push(data);
+    });
+  }
+
+  updateLogEntryQuantity(tracker:NudgeTracker, log:NudgeUserDataLog, quantity:number) {
+    if(log.quantity == quantity) return;
+    
+    log.quantity = quantity;
+    this.updateLogEntry(tracker, log);
+  }
+
+  updateLogEntryNotes(tracker:NudgeTracker, log:NudgeUserDataLog, notes:string) {
+    if(log.notes == notes) return;
+    
+    log.notes = notes;
+    this.updateLogEntry(tracker, log);
+  }
+
+  updateLogEntryTime(tracker:NudgeTracker, log:NudgeUserDataLog, time:string) {
+    if(moment(log.user_time).format('HH:mm a').toUpperCase() == time.toUpperCase()) return;
+    
+    log.user_time = moment(log.user_time).format('YYYY-MM-DD ') + time;
+    this.updateLogEntry(tracker, log);
+  }
+
+  updateLogEntry(tracker:NudgeTracker, log:NudgeUserDataLog) {
+    this.nudgeSrc.updateTrackerCounter(tracker, log).subscribe(data => {
+      let index:number = tracker.user.logs.indexOf(log);
+      tracker.user.logs.splice(index, 1, data);
     });
   }
 

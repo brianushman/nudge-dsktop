@@ -7,13 +7,13 @@
             </button>
             <div *ngFor="let log of tracker.user.logs" class="entry">
                 <div class="col-sm-2" style="padding-left: 0; padding-right: 8px;">
-                    <app-material-input [Name]="'Quantity'" [Numeric]="true" [Value]="log.quantity" [Required]="true"></app-material-input>
+                    <app-material-input [Name]="'Quantity'" [Numeric]="true" [Value]="log.quantity" [Required]="true" (focusout)="updateLogEntryQuantity(tracker, log, $event.target.value)"></app-material-input>
                 </div>
                 <div class="col-sm-6" style="padding-left: 0; padding-right: 8px;">
-                    <app-material-input [Name]="'Notes'" [Value]="log.notes" [Multiline]="true"></app-material-input>
+                    <app-material-input [Name]="'Notes'" [Value]="log.notes" [Multiline]="true" (focusout)="updateLogEntryNotes(tracker, log, $event.target.value)"></app-material-input>
                 </div>
                 <div class="col-sm-4" style="padding-left: 0; padding-right: 0;">
-                    <app-material-input [Name]="'Time'" [Time]="true" [Value]="formatDate(log.user_time, 'HH:mm')"></app-material-input>
+                    <app-material-input [Name]="'Time'" [Time]="true" [Value]="formatDate(log.user_time, 'HH:mm')" (focusout)="updateLogEntryTime(tracker, log, $event.target.value)"></app-material-input>
                 </div>
                 <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(tracker, log)" title="Remove log entry."></i>
             </div>

@@ -6,6 +6,7 @@ import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { TrackerType } from '../models/TrackerTypeEnum';
 import { ToastrService } from 'ngx-toastr';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-data-display',
@@ -21,9 +22,10 @@ export class DataDisplayComponent implements OnInit {
 
   constructor(
     private http:HttpClient,
+    private cookieService:CookieService,
     private calendarService: CalendarService,
     private toastr: ToastrService) {
-    this.nudgeSrc = new NudgeSource(http);
+    this.nudgeSrc = new NudgeSource(http, cookieService);
   }
 
   ngOnInit() {
@@ -82,12 +84,14 @@ export class DataDisplayComponent implements OnInit {
   }
 
   createLogEntry(tracker:NudgeTracker, quantity:number) {
+    if(quantity == null || quantity <= 0) return;
     this.nudgeSrc.createTrackerCounter(tracker, quantity).subscribe(data => {
       tracker.user.logs.push(data);
     });
   }
 
   updateLogEntryQuantity(tracker:NudgeTracker, log:NudgeUserDataLog, quantity:number) {
+    if(quantity == null || quantity <= 0) return;
     if(log.quantity == quantity) return;
     
     log.quantity = quantity;

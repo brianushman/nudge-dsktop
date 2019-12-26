@@ -17,12 +17,16 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { MaterialInputComponent } from './material-input/material-input.component';
 import { ToastrModule } from 'ngx-toastr';
+import { CookieService } from 'ngx-cookie-service';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms'; 
 
 @NgModule({
   declarations: [
     AppComponent,
     DataDisplayComponent,
-    MaterialInputComponent
+    MaterialInputComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -37,9 +41,10 @@ import { ToastrModule } from 'ngx-toastr';
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
     TimepickerModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

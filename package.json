@@ -26,6 +26,7 @@
     "moment": "^2.24.0",
     "ngx-autosize": "^1.7.2",
     "ngx-bootstrap": "^5.2.0",
+    "ngx-cookie-service": "^2.2.0",
     "ngx-icons": "^0.3.0",
     "ngx-toastr": "^11.2.1",
     "rxjs": "~6.4.0",

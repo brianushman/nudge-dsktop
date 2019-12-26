@@ -18,7 +18,7 @@
                 <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(tracker, log)" title="Remove log entry."></i>
             </div>
             <div class="entry">
-                <app-material-input [Name]="'Quantity'" [Numeric]="true" [Required]="true" (focusout)="createLogEntry(tracker, $event.target.value, $event.target)"></app-material-input>
+                <app-material-input #quantity [Name]="'Enter Quantity'" [Numeric]="true" [Required]="true" (focusout)="createLogEntry(tracker, $event.target.value, $event.target)"></app-material-input>
             </div>
         </accordion-group>
     </accordion>

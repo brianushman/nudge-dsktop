@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import * as uuid from 'uuid';
 
 @Component({
@@ -7,6 +7,8 @@ import * as uuid from 'uuid';
   styleUrls: ['./material-input.component.css']
 })
 export class MaterialInputComponent implements OnInit {
+
+  @ViewChild("ctrl", {static: false}) htmlComponent: ElementRef;
 
   @Input() Name: string;
   @Input() Width: string;
@@ -34,4 +36,7 @@ export class MaterialInputComponent implements OnInit {
     return 'text';
   }
 
+  focus() {
+    this.htmlComponent.nativeElement.focus();
+  }
 }

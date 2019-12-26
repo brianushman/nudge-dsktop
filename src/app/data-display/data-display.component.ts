@@ -1,12 +1,12 @@
-import { Component, OnInit, TemplateRef  } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Component, OnInit, ElementRef, ViewChildren, QueryList  } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
 import { NudgeSource } from '../data-source/nudge-src';
 import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
-import { TrackerType } from '../models/TrackerTypeEnum';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
+import { MaterialInputComponent } from '../material-input/material-input.component';
 
 @Component({
   selector: 'app-data-display',
@@ -14,6 +14,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./data-display.component.css']
 })
 export class DataDisplayComponent implements OnInit {
+  @ViewChildren('quantity') quantityFields: QueryList<MaterialInputComponent>;
 
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
@@ -85,11 +86,19 @@ export class DataDisplayComponent implements OnInit {
   }
 
   createLogEntry(tracker:NudgeTracker, quantity:number, htmlElement:any) {
-    if(quantity == null || quantity <= 0) return;
+    if(quantity == null || quantity <= 0) {
+      this.openCounterIndex++;
+      setTimeout(() => {
+        this.quantityFields.toArray()[this.openCounterIndex].focus();
+      }, 200);
+    }
     this.nudgeSrc.createTrackerCounter(tracker, quantity).subscribe(data => {
       tracker.user.logs.push(data);
       htmlElement.value = '';
       this.openCounterIndex++;
+      setTimeout(() => {
+        this.quantityFields.toArray()[this.openCounterIndex].focus();
+      }, 200);
     });
   }
 

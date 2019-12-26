@@ -1,5 +1,5 @@
 <div class="form__group" [style.width]="Width">
-    <input [type]="inputCtrlType()" *ngIf="!Multiline" [id]="uid" class="form__field" placeholder="{{Name}}" [(ngModel)]="Value" [required]="Required ? 'required' : null">
-    <textarea  *ngIf="Multiline" [id]="uid" class="form__field" placeholder="{{Name}}" [(ngModel)]="Value" [required]="Required ? 'required' : null" autosize minRows="1"></textarea>
+    <input #ctrl [type]="inputCtrlType()" *ngIf="!Multiline" [id]="uid" class="form__field" placeholder="{{Name}}" [(ngModel)]="Value" [required]="Required ? 'required' : null">
+    <textarea *ngIf="Multiline" [id]="uid" class="form__field" placeholder="{{Name}}" [(ngModel)]="Value" [required]="Required ? 'required' : null" autosize minRows="1"></textarea>
     <label [for]="uid" class="form__label">{{Name}}</label>
 </div>

@@ -19,6 +19,7 @@ export class DataDisplayComponent implements OnInit {
   readonly counterType: string = 'counters-log';
   nudgeSrc: NudgeSource;
   trackerData: NudgeTracker[];
+  openCounterIndex: number = 0;
 
   constructor(
     private http:HttpClient,
@@ -83,10 +84,12 @@ export class DataDisplayComponent implements OnInit {
     });
   }
 
-  createLogEntry(tracker:NudgeTracker, quantity:number) {
+  createLogEntry(tracker:NudgeTracker, quantity:number, htmlElement:any) {
     if(quantity == null || quantity <= 0) return;
     this.nudgeSrc.createTrackerCounter(tracker, quantity).subscribe(data => {
       tracker.user.logs.push(data);
+      htmlElement.value = '';
+      this.openCounterIndex++;
     });
   }
 
@@ -129,5 +132,9 @@ export class DataDisplayComponent implements OnInit {
         this.toastr.error('Unable to remove log entry.', 'Error');
       }
     );
+  }
+
+  updateOpenCounter(index:number) {
+    this.openCounterIndex = index;
   }
 }

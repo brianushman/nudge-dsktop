@@ -1,24 +1,20 @@
-<h2>Login To Nudge Desktop</h2>
-<p>To login, enter your API Key and Token below.</p>
-
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" style="margin-top: 30px;">
-    <div style="display: inline-block">
-        <div class="form-group inline pull-left">
-            <label>API Key</label>
-            <input type="text" formControlName="key" class="form-control" [ngClass]="{ 'is-invalid': submitted &amp;&amp; registerForm.controls.key.errors }" />
-            <div *ngIf="submitted &amp;&amp; registerForm.controls.key.errors" class="text-danger">
-                <div *ngIf="registerForm.controls.key.errors.required">The API Key is required</div>
-            </div>
+<form [formGroup]="registerForm" id="tokenForm" (ngSubmit)="onSubmit()" style="margin-top: 30px;">
+    <div class="form-group inline pull-left">
+        <label>API Key</label>
+        <input type="text" formControlName="key" class="form-control" [ngClass]="{ 'is-invalid': submitted &amp;&amp; registerForm.controls.key.errors }" />
+        <div *ngIf="submitted &amp;&amp; registerForm.controls.key.errors" class="text-danger">
+            <div *ngIf="registerForm.controls.key.errors.required">The API Key is required</div>
         </div>
-        <div class="form-group inline pull-right">
-            <label>API Token</label>
-            <input type="text" formControlName="token" class="form-control" [ngClass]="{ 'is-invalid': submitted &amp;&amp; registerForm.controls.token.errors }" />
-            <div *ngIf="submitted &amp;&amp; registerForm.controls.token.errors" class="text-danger">
-                <div *ngIf="registerForm.controls.token.errors.required">The API Token is required</div>
-            </div>
+    </div>
+    <div class="form-group inline pull-right">
+        <label>API Token</label>
+        <input type="text" formControlName="token" class="form-control" [ngClass]="{ 'is-invalid': submitted &amp;&amp; registerForm.controls.token.errors }" />
+        <div *ngIf="submitted &amp;&amp; registerForm.controls.token.errors" class="text-danger">
+            <div *ngIf="registerForm.controls.token.errors.required">The API Token is required</div>
         </div>
     </div>
     <div class="form-group">
-        <button class="btn btn-primary">Login</button>
+        <button class="btn btn-secondary pull-right" *ngIf="Cancelable" (click)="onClose()" style="margin-left: 5px">Cancel</button>
+        <button class="btn btn-primary pull-right">{{SubmitText}}</button>
     </div>
 </form>

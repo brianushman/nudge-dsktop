@@ -19,7 +19,8 @@ import { MaterialInputComponent } from './material-input/material-input.componen
 import { ToastrModule } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown'; 
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ModalModule.forRoot(),
     TimepickerModule.forRoot(),
     ToastrModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BsDropdownModule.forRoot()
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],

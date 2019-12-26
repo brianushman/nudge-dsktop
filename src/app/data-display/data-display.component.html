@@ -1,6 +1,6 @@
 <div class="col-sm-5">
     <accordion [isAnimated]="true" [closeOthers]="true">
-        <accordion-group *ngFor="let tracker of getOrderedCounters()" [isOpen]="getOrderedCounters().indexOf(tracker) == 0">
+        <accordion-group *ngFor="let tracker of getOrderedCounters()" [isOpen]="getOrderedCounters().indexOf(tracker) == openCounterIndex" (click)="updateOpenCounter(getOrderedCounters().indexOf(tracker))">
             <button class="btn btn-block clearfix" accordion-heading type="button">
                 <div class="pull-left float-left circle">{{getCounterEnteredQuantity(tracker)}}/{{getCounterTargetQuantity(tracker)}}</div>
                 <span class="float-left pull-left">{{getCounterName(tracker)}}</span>
@@ -18,7 +18,7 @@
                 <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(tracker, log)" title="Remove log entry."></i>
             </div>
             <div class="entry">
-                <app-material-input [Name]="'Quantity'" [Numeric]="true" [Required]="true" (focusout)="createLogEntry(tracker, $event.target.value)"></app-material-input>
+                <app-material-input [Name]="'Quantity'" [Numeric]="true" [Required]="true" (focusout)="createLogEntry(tracker, $event.target.value, $event.target)"></app-material-input>
             </div>
         </accordion-group>
     </accordion>

@@ -41,8 +41,9 @@ export class LoginComponent implements OnInit {
  
     if(this.Cancelable)
       this.closed.emit();
-    else
-      location.reload();
+
+    // always refresh the page, makes no sense not to since api tokens are being updated.
+    location.reload();
   }
 
   onClose() {

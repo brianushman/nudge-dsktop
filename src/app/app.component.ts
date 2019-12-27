@@ -6,6 +6,7 @@ import { NudgeApiService } from './services/NudgeApiService';
 import * as moment from 'moment';
 import { NudgeTracker } from './models/nudge-tracker';
 import { INudgeUserInfo } from './models/INudgeUserInfo';
+import { CalendarService } from './calendar/calendar.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
   tracker: NudgeTracker;
   userInfo:INudgeUserInfo;
 
-  constructor(private cookieService:CookieService,
+  constructor(private calendarService:CalendarService,
+              private cookieService:CookieService,
               private modalService: BsModalService,
               private nudgeApiService:NudgeApiService) {
     this.apiKey = this.cookieService.get('nudge-api-key');
@@ -34,7 +36,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.nudgeApiService.ready.subscribe(user => {
       this.userInfo = user;
-      this.nudgeApiService.getData(moment().toDate()).subscribe(data => this.tracker = this.nudgeApiService.getHealthyRatingTracker(data));
+      
+      this.calendarService.date.subscribe(newDate => {
+        this.nudgeApiService.getData(newDate).subscribe(data => this.tracker = this.nudgeApiService.getHealthyRatingTracker(data));
+      });
     });
   }
 

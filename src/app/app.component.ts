@@ -3,7 +3,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { NudgeApiService } from './services/NudgeApiService';
-import * as moment from 'moment';
 import { NudgeTracker } from './models/nudge-tracker';
 import { INudgeUserInfo } from './models/INudgeUserInfo';
 import { CalendarService } from './calendar/calendar.service';

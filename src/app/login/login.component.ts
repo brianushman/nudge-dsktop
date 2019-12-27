@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-login',
@@ -36,8 +37,22 @@ export class LoginComponent implements OnInit {
         return;
     }
 
-    this.cookieService.set('nudge-api-key', this.registerForm.controls.key.value);
-    this.cookieService.set('nudge-api-token', this.registerForm.controls.token.value);
+    this.cookieService.set(
+      'nudge-api-key', 
+      this.registerForm.controls.key.value, 
+      100000,
+      '/nudge-dsktop',
+      'brianushman.github.io',
+      true,
+      'Lax');
+    this.cookieService.set(
+      'nudge-api-token',
+      this.registerForm.controls.token.value,
+      100000,
+      '/nudge-dsktop',
+      'brianushman.github.io',
+      true,
+      'Lax');
  
     if(this.Cancelable)
       this.closed.emit();

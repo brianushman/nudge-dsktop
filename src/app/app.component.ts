@@ -19,27 +19,17 @@ export class AppComponent implements OnInit {
   title = 'nudge-dsktop';
   apiKey:string = null;
   apiToken:string = null;
-  authenticated: boolean = false;
-  tracker: NudgeTracker;
-  userInfo:INudgeUserInfo;
 
-  constructor(private calendarService:CalendarService,
-              private cookieService:CookieService,
+  constructor(private cookieService:CookieService,
               private modalService: BsModalService,
               private nudgeApiService:NudgeApiService) {
-    this.apiKey = this.cookieService.get('nudge-api-key');
-    this.apiToken = this.cookieService.get('nudge-api-token');
-    this.authenticated = (this.apiToken.length != 0 && this.apiKey.length != 0);
   }
 
   ngOnInit(): void {
-    this.nudgeApiService.ready.subscribe(user => {
-      this.userInfo = user;
-      
-      this.calendarService.date.subscribe(newDate => {
-        this.nudgeApiService.getData(newDate).subscribe(data => this.tracker = this.nudgeApiService.getHealthyRatingTracker(data));
-      });
-    });
+  }
+
+  getUserName():string {
+    return this.nudgeApiService.UserInfo().firstname;
   }
 
   isDataReady():boolean {
@@ -55,17 +45,17 @@ export class AppComponent implements OnInit {
   }
 
   getHealthRating():number {
-    if(this.tracker == null || this.tracker.user == null) return 0;
-    if(this.tracker.user.logs.length == 0) return 0;
-    return this.tracker.user.logs[0].quantity;
+    var healthTracker = this.nudgeApiService.getHealthyRatingTracker();
+    return healthTracker == null || this.nudgeApiService.getHealthyRatingTracker().user.logs.length == 0 ? 0 : this.nudgeApiService.getHealthyRatingTracker().user.logs[0].quantity;
   }
 
   healthRatingChanged(value:number) {
-    this.nudgeApiService.updateHealthyRatingTracker(this.tracker, value).subscribe(data => {
-      if(this.tracker.user.logs.length == 0)
-        this.tracker.user.logs.push(data);
+    var healthTracker = this.nudgeApiService.getHealthyRatingTracker();
+    this.nudgeApiService.updateHealthyRatingTracker(value).subscribe(data => {
+      if(healthTracker.user.logs.length == 0)
+      healthTracker.user.logs.push(data);
       else
-        this.tracker.user.logs.splice(1, 1, data);
+      healthTracker.user.logs.splice(1, 1, data);
     });
   }
 }

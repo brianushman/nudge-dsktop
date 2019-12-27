@@ -5,7 +5,7 @@
     alt="Angular Logo"
     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
   />
-  <span>Welcome<span *ngIf="userInfo != null">, {{userInfo.firstname}}</span></span>
+  <span>Welcome<span *ngIf="userInfo != null">, {{getUserName()}}</span></span>
   <div class="spacer"></div>
   <div class="btn-group" dropdown placement="left" placement="bottom right">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle settings-button"
@@ -22,12 +22,12 @@
 </div>
 
 <div class="content" role="main" *ngIf="isDataReady()">
-  <h2 *ngIf="!authenticated">Login To Nudge Desktop</h2>
-  <p *ngIf="!authenticated">To login, enter your API Key and Token below.</p>
-  <app-login *ngIf="!authenticated"></app-login>
-  <app-daily-health-rating *ngIf="authenticated" [value]="getHealthRating()" (selected)="healthRatingChanged($event)"></app-daily-health-rating>
-  <app-calendar *ngIf="authenticated"></app-calendar>
-  <app-data-display *ngIf="authenticated"></app-data-display>
+  <h2 *ngIf="!isDataReady()">Login To Nudge Desktop</h2>
+  <p *ngIf="!isDataReady()">To login, enter your API Key and Token below.</p>
+  <app-login *ngIf="!isDataReady()"></app-login>
+  <app-daily-health-rating *ngIf="isDataReady()" [value]="getHealthRating()" (selected)="healthRatingChanged($event)"></app-daily-health-rating>
+  <app-calendar *ngIf="isDataReady()"></app-calendar>
+  <app-data-display *ngIf="isDataReady()"></app-data-display>
 </div>
 
 <!-- Footer -->

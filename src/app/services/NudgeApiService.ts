@@ -7,6 +7,7 @@ import { TrackerType } from '../models/TrackerTypeEnum';
 import { CookieService } from 'ngx-cookie-service';
 import { INudgeUserInfo } from '../models/INudgeUserInfo';
 import { Injectable, Output, EventEmitter } from '@angular/core';
+import { CalendarService } from '../calendar/calendar.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,25 +19,35 @@ export class NudgeApiService {
     private apiKey:string;
     private apiToken:string;
     private userInfo: INudgeUserInfo = null;
+    private trackerData: NudgeTracker[];
     
-    @Output() ready = new EventEmitter<INudgeUserInfo>();
+    @Output() ready = new EventEmitter<NudgeTracker[]>();
     
     constructor(
         private http:HttpClient,
-        private cookieService:CookieService){
-        this.apiKey = cookieService.get('nudge-api-key');
-        this.apiToken = cookieService.get('nudge-api-token');
-        this.getUserInfo().subscribe(data => {
-            this.userInfo = data;
-            this.ready.emit(data);
-        });
+        private cookieService:CookieService,
+        private calendarService:CalendarService) {
+            this.calendarService.date.subscribe(newDate => {
+                if(!this.serviceInitialized()) return;
+                this.trackerData = null;
+                this.getData(newDate).subscribe(data => {
+                    this.trackerData = data;
+                    this.ready.emit(data);
+                });
+            });
+        
+            this.apiKey = cookieService.get('nudge-api-key');
+            this.apiToken = cookieService.get('nudge-api-token');
+            this.getUserInfo().subscribe(user => {
+                this.userInfo = user;
+                this.getData(moment().toDate()).subscribe(data => {
+                    this.trackerData = data;
+                    this.ready.emit(data);
+                });
+            });
     }
 
-    public serviceInitialized():boolean {
-        return this.userInfo != null;
-    }
-
-    public getUserInfo():Observable<INudgeUserInfo> {
+    private getUserInfo():Observable<INudgeUserInfo> {
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -47,7 +58,7 @@ export class NudgeApiService {
         return this.http.get<INudgeUserInfo>(this.baseUrl + '/3/user', {headers})
     }
 
-    public getData(date:Date):Observable<NudgeTracker[]> {
+    private getData(date:Date) {
         const dateStr:string = moment(date).format('YYYY-MM-DD');
 
         const headers = new HttpHeaders()
@@ -58,6 +69,18 @@ export class NudgeApiService {
             .set("x-requested-with", "XMLHttpRequest")
 
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/${this.userInfo.id}/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
+    }
+
+    public serviceInitialized():boolean {
+        return this.userInfo != null;
+    }
+
+    public UserInfo():INudgeUserInfo {
+        return this.userInfo;
+    }
+
+    public TrackerData():NudgeTracker[] {
+        return this.trackerData;
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number):Observable<NudgeUserDataLog> {
@@ -222,22 +245,24 @@ export class NudgeApiService {
         return this.http.delete<any>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs/${log.id.toString()}`, {headers})
     }
 
-    public getHealthyRatingTracker(trackers:NudgeTracker[]):NudgeTracker {
-        for(let i = 0; i < trackers.length; ++i) {
-            if(trackers[i].name.toUpperCase().startsWith('HOW HEALTHY')) return trackers[i];
+    public getHealthyRatingTracker():NudgeTracker {
+        if(this.trackerData == null) return null;
+        for(let i = 0; i < this.trackerData.length; ++i) {
+            if(this.trackerData[i].name.toUpperCase().startsWith('HOW HEALTHY')) return this.trackerData[i];
         }
         return null;
     }
 
-    public updateHealthyRatingTracker(tracker:NudgeTracker, value:number):Observable<NudgeUserDataLog> {
-        if(tracker.user.logs.length == 0)
+    public updateHealthyRatingTracker(value:number):Observable<NudgeUserDataLog> {
+        var healthTracker = this.getHealthyRatingTracker();
+        if(healthTracker.user.logs.length == 0)
         {
-            return this.createTrackerCounter(tracker, value);
+            return this.createTrackerCounter(healthTracker, value);
         }
         else
         {
-            tracker.user.logs[0].quantity = value;
-            return this.updateTrackerCounter(tracker, tracker.user.logs[0]);
+            healthTracker.user.logs[0].quantity = value;
+            return this.updateTrackerCounter(healthTracker, healthTracker.user.logs[0]);
         }
     }
 }

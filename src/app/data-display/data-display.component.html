@@ -1,4 +1,4 @@
-<div class="col-sm-5">
+<div class="col-sm-5" style="min-height: 500px;">
     <accordion [isAnimated]="true" [closeOthers]="true">
         <accordion-group *ngFor="let tracker of getOrderedCounters()" [isOpen]="getOrderedCounters().indexOf(tracker) == openCounterIndex" (click)="updateOpenCounter(getOrderedCounters().indexOf(tracker))">
             <button class="btn btn-block clearfix" accordion-heading type="button">

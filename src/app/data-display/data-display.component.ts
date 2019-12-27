@@ -19,22 +19,15 @@ export class DataDisplayComponent implements OnInit {
   readonly counterType: string = 'counters-log';
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
-  trackerData: NudgeTracker[];
   openCounterIndex: number = 0;
 
   constructor(
     private nudgeApiService:NudgeApiService,
-    private calendarService: CalendarService,
     private toastr: ToastrService,
     private modalService: BsModalService) {
   }
 
   ngOnInit() {
-    this.nudgeApiService.getData(moment().toDate()).subscribe(data => this.trackerData = data);
-
-    this.calendarService.date.subscribe(newDate => {
-      this.nudgeApiService.getData(moment(newDate).toDate()).subscribe(data => this.trackerData = data);
-    });
   }
 
   formatDate(date:Date, format:string):string {
@@ -42,8 +35,8 @@ export class DataDisplayComponent implements OnInit {
   }
 
   getOrderedTextFields() : NudgeTracker[] {
-    if(this.trackerData == null) return [];
-    return this.trackerData.filter(
+    if(this.nudgeApiService.TrackerData() == null) return [];
+    return this.nudgeApiService.TrackerData().filter(
       (tracker: NudgeTracker) => 
         this.questionType === tracker.meta.log_format &&
         true === tracker.user.settings.enabled
@@ -51,12 +44,12 @@ export class DataDisplayComponent implements OnInit {
   }
 
   getOrderedCounters() : NudgeTracker[] {
-    if(this.trackerData == null) return [];
-    return this.trackerData.filter(
+    if(this.nudgeApiService.TrackerData() == null) return [];
+    return this.nudgeApiService.TrackerData().filter(
       (tracker: NudgeTracker) => 
         this.counterType === tracker.meta.log_format &&
         true === tracker.user.settings.enabled &&
-        this.nudgeApiService.getHealthyRatingTracker(this.trackerData) != tracker
+        this.nudgeApiService.getHealthyRatingTracker() != tracker
     ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
   }
 

@@ -20,14 +20,18 @@ import { ToastrModule } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown'; 
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CopyEntryComponent } from './copy-entry/copy-entry.component';
+import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-rating.component'; 
 
 @NgModule({
   declarations: [
     AppComponent,
     DataDisplayComponent,
     MaterialInputComponent,
-    LoginComponent
+    LoginComponent,
+    CopyEntryComponent,
+    DailyHealthRatingComponent
   ],
   imports: [
     BrowserModule,

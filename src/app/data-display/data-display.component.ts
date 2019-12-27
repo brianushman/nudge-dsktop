@@ -56,7 +56,8 @@ export class DataDisplayComponent implements OnInit {
     return this.trackerData.filter(
       (tracker: NudgeTracker) => 
         this.counterType === tracker.meta.log_format &&
-        true === tracker.user.settings.enabled
+        true === tracker.user.settings.enabled &&
+        this.nudgeSrc.getHealthyRatingTracker(this.trackerData) != tracker
     ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
   }
 

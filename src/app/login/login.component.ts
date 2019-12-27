@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
 
   @Input() SubmitText:string = 'Login';
   @Input() Cancelable:boolean = false;
-  @Output() closedEvent = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   registerForm: FormGroup;
   submitted = false;
@@ -39,13 +39,13 @@ export class LoginComponent implements OnInit {
     this.cookieService.set('nudge-api-key', this.registerForm.controls.key.value);
     this.cookieService.set('nudge-api-token', this.registerForm.controls.token.value);
  
-    if(this.closedEvent != null)
-      this.closedEvent.emit();
+    if(this.Cancelable)
+      this.closed.emit();
     else
       location.reload();
   }
 
   onClose() {
-    if(this.closedEvent != null) this.closedEvent.emit();
+    if(this.Cancelable) this.closed.emit();
   }
 }

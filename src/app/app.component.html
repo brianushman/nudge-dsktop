@@ -25,6 +25,7 @@
   <h2 *ngIf="!authenticated">Login To Nudge Desktop</h2>
   <p *ngIf="!authenticated">To login, enter your API Key and Token below.</p>
   <app-login *ngIf="!authenticated"></app-login>
+  <app-daily-health-rating *ngIf="authenticated" [value]="getHealthRating()" (selected)="healthRatingChanged($event)"></app-daily-health-rating>
   <app-calendar *ngIf="authenticated"></app-calendar>
   <app-data-display *ngIf="authenticated"></app-data-display>
 
@@ -47,7 +48,7 @@
   </div>
   <div class="modal-body">
     <p>Update your API Key and Token below.</p>
-    <app-login [SubmitText]="'Update'" [Cancelable]="true" (closedEvent)="closeLoginPopup()"></app-login>
+    <app-login [SubmitText]="'Update'" [Cancelable]="true" (closed)="closeLoginPopup()"></app-login>
   </div>
 </ng-template>
 

@@ -1,0 +1,18 @@
+:host {
+    width: 100%;
+}
+
+h3 {
+    font-weight: bold;
+    font-family: 'Annie Use Your Telescope', cursive;
+}
+
+.icon-collection > i {
+    font-size: 42px;
+    margin: 5px;
+}
+
+.icon-collection > i:hover {
+    color: blue !important;
+    cursor: pointer;
+}

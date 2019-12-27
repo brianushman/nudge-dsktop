@@ -193,4 +193,23 @@ export class NudgeSource {
 
         return this.http.delete<any>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs/${log.id.toString()}`, {headers})
     }
+
+    public getHealthyRatingTracker(trackers:NudgeTracker[]):NudgeTracker {
+        for(let i = 0; i < trackers.length; ++i) {
+            if(trackers[i].name.toUpperCase().startsWith('HOW HEALTHY')) return trackers[i];
+        }
+        return null;
+    }
+
+    public updateHealthyRatingTracker(tracker:NudgeTracker, value:number):Observable<NudgeUserDataLog> {
+        if(tracker.user.logs.length == 0)
+        {
+            return this.createTrackerCounter(tracker, value);
+        }
+        else
+        {
+            tracker.user.logs[0].quantity = value;
+            return this.updateTrackerCounter(tracker, tracker.user.logs[0]);
+        }
+    }
 }

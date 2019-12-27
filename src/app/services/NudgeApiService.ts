@@ -19,7 +19,7 @@ export class NudgeApiService {
     private apiToken:string;
     private userInfo: INudgeUserInfo = null;
     
-    @Output() ready = new EventEmitter();
+    @Output() ready = new EventEmitter<INudgeUserInfo>();
     
     constructor(
         private http:HttpClient,
@@ -28,7 +28,7 @@ export class NudgeApiService {
         this.apiToken = cookieService.get('nudge-api-token');
         this.getUserInfo().subscribe(data => {
             this.userInfo = data;
-            this.ready.emit();
+            this.ready.emit(data);
         });
     }
 

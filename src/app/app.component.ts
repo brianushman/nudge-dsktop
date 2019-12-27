@@ -5,6 +5,7 @@ import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { NudgeApiService } from './services/NudgeApiService';
 import * as moment from 'moment';
 import { NudgeTracker } from './models/nudge-tracker';
+import { INudgeUserInfo } from './models/INudgeUserInfo';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   apiToken:string = null;
   authenticated: boolean = false;
   tracker: NudgeTracker;
+  userInfo:INudgeUserInfo;
 
   constructor(private cookieService:CookieService,
               private modalService: BsModalService,
@@ -30,7 +32,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nudgeApiService.ready.subscribe(() => {
+    this.nudgeApiService.ready.subscribe(user => {
+      this.userInfo = user;
       this.nudgeApiService.getData(moment().toDate()).subscribe(data => this.tracker = this.nudgeApiService.getHealthyRatingTracker(data));
     });
   }

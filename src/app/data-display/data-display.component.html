@@ -18,7 +18,7 @@
                 <i class="fa fa-trash" title="Remove this log entry" (click)="deleteLogEntry(tracker, log)" title="Remove log entry."></i>
             </div>
             <div class="entry">
-                <app-material-input #quantity [Name]="'Enter Quantity'" [Numeric]="true" [Required]="true" (focusout)="createLogEntry(tracker, $event.target.value, $event.target)"></app-material-input>
+                <app-material-input #quantity [Name]="'Enter Quantity'" [Numeric]="true" [Required]="true" (keydown.tab)="createLogEntry(tracker, $event.target.value, $event.target)" (keyup.enter)="createLogEntry(tracker, $event.target.value, $event.target)"></app-material-input>
             </div>
         </accordion-group>
     </accordion>
@@ -28,7 +28,7 @@
         <label>
             {{tracker.name}}
             <div class="btn-group" dropdown placement="left" placement="bottom right" *ngIf="isCopyable(tracker.name)">
-                <button dropdownToggle type="button" class="btn dropdown-toggle copy-question">
+                <button dropdownToggle type="button" tabindex="-1" class="btn dropdown-toggle copy-question">
                     <i class="fas fa-share-square"></i>
                 </button>
                 <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">

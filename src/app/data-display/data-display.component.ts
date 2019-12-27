@@ -1,11 +1,9 @@
-import { Component, OnInit, ElementRef, ViewChildren, QueryList, TemplateRef  } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { NudgeSource } from '../data-source/nudge-src';
+import { Component, OnInit, ViewChildren, QueryList, TemplateRef  } from '@angular/core';
+import { NudgeApiService } from '../services/NudgeApiService';
 import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { CookieService } from 'ngx-cookie-service';
 import { MaterialInputComponent } from '../material-input/material-input.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -21,24 +19,21 @@ export class DataDisplayComponent implements OnInit {
   readonly counterType: string = 'counters-log';
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
-  nudgeSrc: NudgeSource;
   trackerData: NudgeTracker[];
   openCounterIndex: number = 0;
 
   constructor(
-    private http:HttpClient,
-    private cookieService:CookieService,
+    private nudgeApiService:NudgeApiService,
     private calendarService: CalendarService,
     private toastr: ToastrService,
     private modalService: BsModalService) {
-    this.nudgeSrc = new NudgeSource(http, cookieService);
   }
 
   ngOnInit() {
-    this.nudgeSrc.getData(moment().toDate()).subscribe(data => this.trackerData = data);
+    this.nudgeApiService.getData(moment().toDate()).subscribe(data => this.trackerData = data);
 
     this.calendarService.date.subscribe(newDate => {
-      this.nudgeSrc.getData(moment(newDate).toDate()).subscribe(data => this.trackerData = data);
+      this.nudgeApiService.getData(moment(newDate).toDate()).subscribe(data => this.trackerData = data);
     });
   }
 
@@ -61,7 +56,7 @@ export class DataDisplayComponent implements OnInit {
       (tracker: NudgeTracker) => 
         this.counterType === tracker.meta.log_format &&
         true === tracker.user.settings.enabled &&
-        this.nudgeSrc.getHealthyRatingTracker(this.trackerData) != tracker
+        this.nudgeApiService.getHealthyRatingTracker(this.trackerData) != tracker
     ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
   }
 
@@ -85,7 +80,7 @@ export class DataDisplayComponent implements OnInit {
   }
 
   updateTextField(tracker:NudgeTracker, text:string) {
-    this.nudgeSrc.updateTrackerQuestion(tracker, text).subscribe(data => {
+    this.nudgeApiService.updateTrackerQuestion(tracker, text).subscribe(data => {
       console.debug(data);
     });
   }
@@ -97,7 +92,7 @@ export class DataDisplayComponent implements OnInit {
         this.quantityFields.toArray()[this.openCounterIndex].focus();
       }, 200);
     }
-    this.nudgeSrc.createTrackerCounter(tracker, quantity).subscribe(data => {
+    this.nudgeApiService.createTrackerCounter(tracker, quantity).subscribe(data => {
       tracker.user.logs.push(data);
       htmlElement.value = '';
       this.openCounterIndex++;
@@ -130,14 +125,14 @@ export class DataDisplayComponent implements OnInit {
   }
 
   updateLogEntry(tracker:NudgeTracker, log:NudgeUserDataLog) {
-    this.nudgeSrc.updateTrackerCounter(tracker, log).subscribe(data => {
+    this.nudgeApiService.updateTrackerCounter(tracker, log).subscribe(data => {
       let index:number = tracker.user.logs.indexOf(log);
       tracker.user.logs.splice(index, 1, data);
     });
   }
 
   deleteLogEntry(tracker:NudgeTracker, log:NudgeUserDataLog) {
-    this.nudgeSrc.deleteTracker(tracker, log).subscribe(
+    this.nudgeApiService.deleteTracker(tracker, log).subscribe(
       data => {
         if(!data.success) this.toastr.error('Unable to remove log entry.', 'Error');
         tracker.user.logs.splice(tracker.user.logs.indexOf(log), 1);

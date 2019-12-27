@@ -23,6 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CopyEntryComponent } from './copy-entry/copy-entry.component';
 import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-rating.component'; 
+import { NudgeApiService } from './services/NudgeApiService';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,7 @@ import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-r
     ReactiveFormsModule,
     BsDropdownModule.forRoot()
   ],
-  providers: [CookieService],
+  providers: [CookieService, NudgeApiService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

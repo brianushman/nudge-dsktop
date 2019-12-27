@@ -1,8 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NudgeTracker } from '../models/nudge-tracker';
-import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { NudgeSource } from '../data-source/nudge-src';
+import { NudgeApiService } from '../services/NudgeApiService';
 
 @Component({
   selector: 'app-copy-entry',
@@ -11,14 +10,12 @@ import { NudgeSource } from '../data-source/nudge-src';
 })
 export class CopyEntryComponent implements OnInit {
 
-  nudgeSrc: NudgeSource;
   @Input() Entry:NudgeTracker;
   @Input() CounterTypes:NudgeTracker[];
 
   constructor(
-    private http:HttpClient,
-    private cookieService:CookieService) {
-      this.nudgeSrc = new NudgeSource(http, cookieService);
+    private cookieService:CookieService,
+    private nudgeApiService:NudgeApiService) {
     }
 
   ngOnInit() {

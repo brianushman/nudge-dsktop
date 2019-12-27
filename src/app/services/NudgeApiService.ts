@@ -5,18 +5,46 @@ import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
 import { Observable } from 'rxjs/internal/Observable';
 import { TrackerType } from '../models/TrackerTypeEnum';
 import { CookieService } from 'ngx-cookie-service';
+import { INudgeUserInfo } from '../models/INudgeUserInfo';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 
-export class NudgeSource {
+@Injectable({
+    providedIn: 'root',
+})
 
-    baseUrl:string = 'https://api.nudgeyourself.com';
-    apiKey:string;
-    apiToken:string;
-    http:HttpClient;
+export class NudgeApiService {
 
-    constructor(http:HttpClient, cookieService:CookieService){
-        this.http = http;
+    private baseUrl:string = 'https://api.nudgeyourself.com';
+    private apiKey:string;
+    private apiToken:string;
+    private userInfo: INudgeUserInfo = null;
+    
+    @Output() ready = new EventEmitter();
+    
+    constructor(
+        private http:HttpClient,
+        private cookieService:CookieService){
         this.apiKey = cookieService.get('nudge-api-key');
         this.apiToken = cookieService.get('nudge-api-token');
+        this.getUserInfo().subscribe(data => {
+            this.userInfo = data;
+            this.ready.emit();
+        });
+    }
+
+    public serviceInitialized():boolean {
+        return this.userInfo != null;
+    }
+
+    public getUserInfo():Observable<INudgeUserInfo> {
+        const headers = new HttpHeaders()
+            .set("Accept", "application/json")
+            .set("x-api-token", this.apiToken)
+            .set("x-api-key", this.apiKey)
+            .set("Accept-Language", "en-us")
+            .set("x-requested-with", "XMLHttpRequest")
+
+        return this.http.get<INudgeUserInfo>(this.baseUrl + '/3/user', {headers})
     }
 
     public getData(date:Date):Observable<NudgeTracker[]> {
@@ -29,7 +57,7 @@ export class NudgeSource {
             .set("Accept-Language", "en-us")
             .set("x-requested-with", "XMLHttpRequest")
 
-        return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/188407/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
+        return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/${this.userInfo.id}/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number):Observable<NudgeUserDataLog> {

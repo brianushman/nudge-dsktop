@@ -25,6 +25,10 @@ export class CopyEntryComponent implements OnInit {
     return tracker.name.substr(tracker.name.indexOf(' '));
   }
 
+  copy() {
+    
+  }
+
   submit() {
 
   }

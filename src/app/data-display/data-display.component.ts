@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChildren, QueryList  } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList, TemplateRef  } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { NudgeSource } from '../data-source/nudge-src';
 import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { MaterialInputComponent } from '../material-input/material-input.component';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-data-display',
@@ -18,6 +19,8 @@ export class DataDisplayComponent implements OnInit {
 
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
+  modalRef: BsModalRef;
+  modalTracker: NudgeTracker;
   nudgeSrc: NudgeSource;
   trackerData: NudgeTracker[];
   openCounterIndex: number = 0;
@@ -26,7 +29,8 @@ export class DataDisplayComponent implements OnInit {
     private http:HttpClient,
     private cookieService:CookieService,
     private calendarService: CalendarService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private modalService: BsModalService) {
     this.nudgeSrc = new NudgeSource(http, cookieService);
   }
 
@@ -146,5 +150,20 @@ export class DataDisplayComponent implements OnInit {
 
   updateOpenCounter(index:number) {
     this.openCounterIndex = index;
+  }
+
+  isCopyable(trackerName:string):boolean {
+    return trackerName.toUpperCase().indexOf("SNACK") >= 0 ||
+          trackerName.toUpperCase().indexOf("BREAKFAST") >= 0 ||
+          trackerName.toUpperCase().indexOf("LUNCH") >= 0 ||
+          trackerName.toUpperCase().indexOf("DINNER") >= 0 ||
+          trackerName.toUpperCase().indexOf("MORNING") >= 0 ||
+          trackerName.toUpperCase().indexOf("AFTERNOON") >= 0 ||
+          trackerName.toUpperCase().indexOf("EVENING") >= 0;
+  }
+
+  openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker) {
+    this.modalTracker = tracker;
+    this.modalRef = this.modalService.show(template, { animated: true });
   }
 }

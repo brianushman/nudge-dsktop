@@ -25,7 +25,29 @@
 </div>
 <div class="col-sm-7">
     <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
-        <label>{{tracker.name}}</label>
+        <label>
+            {{tracker.name}}
+            <div class="btn-group" dropdown placement="left" placement="bottom right" *ngIf="isCopyable(tracker.name)">
+                <button dropdownToggle type="button" class="btn dropdown-toggle copy-question">
+                    <i class="fas fa-share-square"></i>
+                </button>
+                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+                <li role="menuitem">
+                    <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy Yesterday</a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item" href="#" (click)="showLoginPopup(template)">Copy From Date</a>
+                </li>
+                <li role="menuitem">
+                    <a class="dropdown-item" href="#" (click)="showLoginPopup(template)">Copy To Date</a>
+                </li>
+                </ul >
+            </div>
+        </label>
         <textarea autosize minRows="1" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>
     </div>
 </div>
+
+<ng-template #template>
+    <app-copy-entry [Entry]="modalTracker" [CounterTypes]="getOrderedCounters()"></app-copy-entry>
+</ng-template>

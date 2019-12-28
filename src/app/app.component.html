@@ -21,13 +21,13 @@
   </div>
 </div>
 
-<div class="content" role="main" *ngIf="isDataReady()">
-  <h2 *ngIf="!isDataReady()">Login To Nudge Desktop</h2>
-  <p *ngIf="!isDataReady()">To login, enter your API Key and Token below.</p>
-  <app-login *ngIf="!isDataReady()"></app-login>
-  <app-daily-health-rating *ngIf="isDataReady()" [value]="getHealthRating()" (selected)="healthRatingChanged($event)"></app-daily-health-rating>
-  <app-calendar *ngIf="isDataReady()"></app-calendar>
-  <app-data-display *ngIf="isDataReady()"></app-data-display>
+<div class="content" role="main">
+  <h2 *ngIf="!isLoggedIn()">Login To Nudge Desktop</h2>
+  <p *ngIf="!isLoggedIn()">To login, enter your API Key and Token below.</p>
+  <app-login *ngIf="!isLoggedIn()"></app-login>
+  <app-daily-health-rating *ngIf="isLoggedIn() && isDataReady()" [value]="getHealthRating()" (selected)="healthRatingChanged($event)"></app-daily-health-rating>
+  <app-calendar *ngIf="isLoggedIn() && isDataReady()"></app-calendar>
+  <app-data-display *ngIf="isLoggedIn() && isDataReady()"></app-data-display>
 </div>
 
 <!-- Footer -->

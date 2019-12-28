@@ -31,6 +31,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isLoggedIn():boolean {
+    return null != this.cookieService.get('nudge-api-key');
+  }
+
   getUserName():string {
     return this.nudgeApiService.UserInfo().firstname;
   }

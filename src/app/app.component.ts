@@ -4,6 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { NudgeApiService } from './services/NudgeApiService';
 import { NgxSpinnerService } from "ngx-spinner";
+import { INudgeUserInfo } from './models/INudgeUserInfo';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +33,10 @@ export class AppComponent implements OnInit {
 
   getUserName():string {
     return this.nudgeApiService.UserInfo().firstname;
+  }
+
+  getUserInfo():INudgeUserInfo {
+    return this.nudgeApiService.UserInfo();
   }
 
   isDataReady():boolean {

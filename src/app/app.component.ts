@@ -3,9 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { NudgeApiService } from './services/NudgeApiService';
-import { NudgeTracker } from './models/nudge-tracker';
-import { INudgeUserInfo } from './models/INudgeUserInfo';
-import { CalendarService } from './calendar/calendar.service';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-root',
@@ -20,9 +18,13 @@ export class AppComponent implements OnInit {
   apiKey:string = null;
   apiToken:string = null;
 
-  constructor(private cookieService:CookieService,
-              private modalService: BsModalService,
-              private nudgeApiService:NudgeApiService) {
+  constructor(
+    private cookieService:CookieService,
+    private modalService: BsModalService,
+    private nudgeApiService:NudgeApiService,
+    private spinner: NgxSpinnerService) {
+      this.nudgeApiService.notReady.subscribe(() => this.spinner.show());
+      this.nudgeApiService.ready.subscribe(() => this.spinner.hide());
   }
 
   ngOnInit(): void {

@@ -24,6 +24,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CopyEntryComponent } from './copy-entry/copy-entry.component';
 import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-rating.component'; 
 import { NudgeApiService } from './services/NudgeApiService';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { NudgeApiService } from './services/NudgeApiService';
     TimepickerModule.forRoot(),
     ToastrModule.forRoot(),
     ReactiveFormsModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    NgxSpinnerModule
   ],
   providers: [CookieService, NudgeApiService],
   bootstrap: [AppComponent],

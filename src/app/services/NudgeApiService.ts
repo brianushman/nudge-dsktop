@@ -22,12 +22,14 @@ export class NudgeApiService {
     private userInfo: INudgeUserInfo = null;
     private trackerData:Map<string, NudgeTracker[]> =  new Map();
     
+    @Output() notReady = new EventEmitter<NudgeTracker[]>();
     @Output() ready = new EventEmitter<NudgeTracker[]>();
     
     constructor(
         private http:HttpClient,
         private cookieService:CookieService,
         private calendarService:CalendarService) {
+            
             this.calendarService.date.subscribe(newDate => {
                 if(!this.serviceInitialized()) return;
                 var dateStr = this.getDateFormat(newDate);
@@ -37,15 +39,18 @@ export class NudgeApiService {
                     this.ready.emit(this.trackerData.get(dateStr));
                 }
                 else {
-                this.getData(newDate).subscribe(data => {
-                    this.trackerData.set(dateStr, data);
-                    this.ready.emit(data);
-                });
-            }
+                    this.notReady.emit();
+                    this.getData(newDate).subscribe(data => 
+                    {
+                        this.trackerData.set(dateStr, data);
+                        this.ready.emit(data);
+                    });
+                }
             });
         
             this.apiKey = cookieService.get('nudge-api-key');
             this.apiToken = cookieService.get('nudge-api-token');
+            this.notReady.emit();
             this.getUserInfo().subscribe(user => {
                 this.userInfo = user;
                 let now = moment().toDate();
@@ -198,7 +203,7 @@ export class NudgeApiService {
     
     public updateTrackerQuestion(tracker:NudgeTracker, notes:string):Observable<NudgeUserDataLog> {
         if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
-        
+
         var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")

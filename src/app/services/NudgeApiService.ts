@@ -30,7 +30,8 @@ export class NudgeApiService {
             this.calendarService.date.subscribe(newDate => {
                 if(!this.serviceInitialized()) return;
                 var dateStr = this.getDateFormat(newDate);
-                //this.trackerData.set(dateStr, null);
+                
+                // check for a cached version before retrieving from the API.
                 if(this.trackerData.get(dateStr) != null) {
                     this.ready.emit(this.trackerData.get(dateStr));
                 }
@@ -46,8 +47,9 @@ export class NudgeApiService {
             this.apiToken = cookieService.get('nudge-api-token');
             this.getUserInfo().subscribe(user => {
                 this.userInfo = user;
-                this.getData(moment().toDate()).subscribe(data => {
-                    this.trackerData.set(this.getDateFormat(moment().toDate()), data);
+                let now = moment().toDate();
+                this.getData(now).subscribe(data => {
+                    this.trackerData.set(this.getDateFormat(now), data);
                     this.ready.emit(data);
                 });
             });
@@ -98,7 +100,7 @@ export class NudgeApiService {
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number):Observable<NudgeUserDataLog> {
-        var timestamp = moment();
+        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -146,7 +148,7 @@ export class NudgeApiService {
     }
 
     public updateTrackerCounter(tracker:NudgeTracker, log:NudgeUserDataLog):Observable<NudgeUserDataLog> {
-        var timestamp = moment();
+        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -194,7 +196,7 @@ export class NudgeApiService {
     }
     
     public updateTrackerQuestion(tracker:NudgeTracker, notes:string):Observable<NudgeUserDataLog> {
-        var timestamp = moment();
+        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)

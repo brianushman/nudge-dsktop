@@ -1,9 +1,20 @@
-<select [(ngModel)]="Entry">
-    <option *ngFor="let question of QuestionTypes" [ngValue]="question">{{question.name}}</option>
-</select>
-<p>{{Entry.user.logs[0].response}}</p>
-<div *ngFor="let tracker of CounterTypes">
-    <app-material-input [Name]="getCounterName(tracker)"></app-material-input>
+<label class="copy-label">Copy To...</label>
+<div class="mdl-selectfield">
+    <select class="browser-default" [(ngModel)]="Entry">
+        <option *ngFor="let question of QuestionTypes" [ngValue]="question">{{question.name}}</option>
+    </select>
 </div>
-<button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
-<button type="button" class="btn btn-primary" (click)="copy()">Copy</button>
+
+<label>Meal Contents</label>
+<p class="meal-text">{{Entry.user.logs[0].response}}</p>
+
+<label>Enter Portions...</label>
+<div class="counter-container">
+    <div class="counter" *ngFor="let tracker of CounterTypes">
+        <app-material-input [Name]="getCounterName(tracker)" [Value]="0" [Numeric]="true"></app-material-input>
+    </div>
+</div>
+<div class="row mt-3 mr-2 pull-right">
+    <button type="button" class="btn btn-secondary mr-2" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="copy()">Copy</button>
+</div>

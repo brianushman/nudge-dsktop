@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NudgeTracker } from '../models/nudge-tracker';
 import { CookieService } from 'ngx-cookie-service';
 import { NudgeApiService } from '../services/NudgeApiService';
@@ -6,13 +6,16 @@ import { NudgeApiService } from '../services/NudgeApiService';
 @Component({
   selector: 'app-copy-entry',
   templateUrl: './copy-entry.component.html',
-  styleUrls: ['./copy-entry.component.css']
+  styleUrls: ['./copy-entry.component.scss']
 })
 export class CopyEntryComponent implements OnInit {
 
   @Input() Entry:NudgeTracker;
   @Input() CounterTypes:NudgeTracker[];
   @Input() QuestionTypes:NudgeTracker[];
+
+  @Output() onCancel = new EventEmitter<number>();
+  @Output() onSsave = new EventEmitter<number>();
 
   constructor(
     private cookieService:CookieService,

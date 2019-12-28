@@ -1,0 +1,81 @@
+/* ==========  Select Field Variables ========== */
+$color-black: "0,0,0";
+$select-background-color: transparent;
+$select-border-color: unquote("rgba(#{$color-black}, 0.12)") !default;
+$select-font-size: 18px;
+$select-color: unquote("rgba(#{$color-black})") !default;
+$select-padding: 4px;
+
+/* ==========  Select Field ========== */
+
+/* Style Select Field */
+select {
+  font-family: inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: $select-padding 0;
+  font-size: $select-font-size;
+  color: $select-color;
+  border: none;
+  border-bottom: 1px solid $select-border-color;
+}
+
+/* Remove focus */
+select:focus {
+  outline: none}
+
+/* Use custom arrow */
+.mdl-selectfield select {appearance: none}
+.mdl-selectfield {
+  position: relative;
+    &:after {
+        position: absolute;
+        top: 0.75em;
+        right: 0.5em;
+        /* Styling the down arrow */
+        width: 0;
+        height: 0;
+        padding: 0;
+        content: '';
+        border-left: .25em solid transparent;
+        border-right: .25em solid transparent;
+        border-top: .375em solid $select-border-color;
+        pointer-events: none;
+    }
+}
+
+:host {
+    font-family: 'Annie Use Your Telescope', cursive;
+    padding: 20px;
+}
+
+.mdl-selectfield {
+    width: 240px;
+    min-width: 80%;
+}
+
+label {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0 0 0;
+}
+
+.copy-label {
+    margin: 0;
+}
+
+.meal-text {
+    width: 80%;
+    font-size: $select-font-size;
+    border-bottom: 1px solid $select-border-color;
+}
+
+.counter-container {
+    display: block;
+}
+
+.counter {
+    width: 25%;
+    display: inline-block;
+    padding: 0 10px;
+}

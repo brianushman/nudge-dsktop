@@ -19,7 +19,7 @@ export class NudgeApiService {
     private apiKey:string;
     private apiToken:string;
     private userInfo: INudgeUserInfo = null;
-    private trackerData: NudgeTracker[];
+    private trackerData:Map<string, NudgeTracker[]> =  new Map();
     
     @Output() ready = new EventEmitter<NudgeTracker[]>();
     
@@ -29,11 +29,17 @@ export class NudgeApiService {
         private calendarService:CalendarService) {
             this.calendarService.date.subscribe(newDate => {
                 if(!this.serviceInitialized()) return;
-                this.trackerData = null;
+                var dateStr = this.getDateFormat(newDate);
+                //this.trackerData.set(dateStr, null);
+                if(this.trackerData.get(dateStr) != null) {
+                    this.ready.emit(this.trackerData.get(dateStr));
+                }
+                else {
                 this.getData(newDate).subscribe(data => {
-                    this.trackerData = data;
+                    this.trackerData.set(dateStr, data);
                     this.ready.emit(data);
                 });
+            }
             });
         
             this.apiKey = cookieService.get('nudge-api-key');
@@ -41,7 +47,7 @@ export class NudgeApiService {
             this.getUserInfo().subscribe(user => {
                 this.userInfo = user;
                 this.getData(moment().toDate()).subscribe(data => {
-                    this.trackerData = data;
+                    this.trackerData.set(this.getDateFormat(moment().toDate()), data);
                     this.ready.emit(data);
                 });
             });
@@ -58,8 +64,12 @@ export class NudgeApiService {
         return this.http.get<INudgeUserInfo>(this.baseUrl + '/3/user', {headers})
     }
 
+    private getDateFormat(date:Date) {
+        return moment(date).format('YYYY-MM-DD');
+    }
+
     private getData(date:Date) {
-        const dateStr:string = moment(date).format('YYYY-MM-DD');
+        const dateStr:string = this.getDateFormat(date);
 
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
@@ -80,7 +90,11 @@ export class NudgeApiService {
     }
 
     public TrackerData():NudgeTracker[] {
-        return this.trackerData;
+        return this.trackerData.get(this.getDateFormat(this.calendarService.currentDate));
+    }
+
+    public TrackerDataByDate(date:Date):NudgeTracker[] {
+        return this.trackerData.get(this.getDateFormat(date));
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number):Observable<NudgeUserDataLog> {
@@ -246,9 +260,9 @@ export class NudgeApiService {
     }
 
     public getHealthyRatingTracker():NudgeTracker {
-        if(this.trackerData == null) return null;
-        for(let i = 0; i < this.trackerData.length; ++i) {
-            if(this.trackerData[i].name.toUpperCase().startsWith('HOW HEALTHY')) return this.trackerData[i];
+        if(this.TrackerData() == null) return null;
+        for(let i = 0; i < this.TrackerData().length; ++i) {
+            if(this.TrackerData()[i].name.toUpperCase().startsWith('HOW HEALTHY')) return this.TrackerData()[i];
         }
         return null;
     }

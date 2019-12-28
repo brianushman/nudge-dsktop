@@ -74,7 +74,12 @@ export class DataDisplayComponent implements OnInit {
 
   updateTextField(tracker:NudgeTracker, text:string) {
     this.nudgeApiService.updateTrackerQuestion(tracker, text).subscribe(data => {
-      console.debug(data);
+      if(tracker.user.logs.length == 0) {
+        tracker.user.logs.push(data);
+      }
+      else {
+        tracker.user.logs.splice(1, 1, data);
+      }
     });
   }
 

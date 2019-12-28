@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { INudgeUserInfo } from '../models/INudgeUserInfo';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { CalendarService } from '../calendar/calendar.service';
+import { EMPTY } from 'rxjs'
 
 @Injectable({
     providedIn: 'root',
@@ -196,6 +197,8 @@ export class NudgeApiService {
     }
     
     public updateTrackerQuestion(tracker:NudgeTracker, notes:string):Observable<NudgeUserDataLog> {
+        if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
+        
         var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")

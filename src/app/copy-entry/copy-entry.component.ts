@@ -12,6 +12,7 @@ export class CopyEntryComponent implements OnInit {
 
   @Input() Entry:NudgeTracker;
   @Input() CounterTypes:NudgeTracker[];
+  @Input() QuestionTypes:NudgeTracker[];
 
   constructor(
     private cookieService:CookieService,

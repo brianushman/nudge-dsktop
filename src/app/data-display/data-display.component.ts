@@ -24,7 +24,8 @@ export class DataDisplayComponent implements OnInit {
   constructor(
     private nudgeApiService:NudgeApiService,
     private toastr: ToastrService,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private calendarService: CalendarService) {
   }
 
   ngOnInit() {
@@ -34,12 +35,26 @@ export class DataDisplayComponent implements OnInit {
     return moment(date).format(format);
   }
 
+  isToday():boolean {
+    return moment().diff(moment(this.calendarService.currentDate), 'days') == 0;
+  }
+
   getOrderedTextFields() : NudgeTracker[] {
     if(this.nudgeApiService.TrackerData() == null) return [];
     return this.nudgeApiService.TrackerData().filter(
       (tracker: NudgeTracker) => 
         this.questionType === tracker.meta.log_format &&
         true === tracker.user.settings.enabled
+    ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
+  }
+
+  getOrderedCopyableTextFields() : NudgeTracker[] {
+    if(this.nudgeApiService.TrackerData() == null) return [];
+    return this.nudgeApiService.TrackerData().filter(
+      (tracker: NudgeTracker) => 
+        this.questionType === tracker.meta.log_format &&
+        true === tracker.user.settings.enabled &&
+        true == this.isCopyable(tracker.name)
     ).sort((a, b) => (a.user.settings.rank > b.user.settings.rank) ? 1 : -1);
   }
 

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -20,8 +19,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private cookieService: CookieService,
-    private router: Router
+    private cookieService: CookieService
     ) { }
 
   ngOnInit() {

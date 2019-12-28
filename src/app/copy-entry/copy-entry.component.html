@@ -1,4 +1,6 @@
-<p>{{Entry.name}}</p>
+<select [(ngModel)]="Entry">
+    <option *ngFor="let question of QuestionTypes" [ngValue]="question">{{question.name}}</option>
+</select>
 <p>{{Entry.user.logs[0].response}}</p>
 <div *ngFor="let tracker of CounterTypes">
     <app-material-input [Name]="getCounterName(tracker)"></app-material-input>

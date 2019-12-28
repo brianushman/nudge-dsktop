@@ -92,5 +92,9 @@
 
   .copy-question {
     font-size: 14px;
-    
+
+  }
+
+  #dropdown-animated > li > a {
+    font-weight: bold;
   }

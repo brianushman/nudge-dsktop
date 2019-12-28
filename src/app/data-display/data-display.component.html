@@ -32,15 +32,12 @@
                     <i class="fas fa-share-square"></i>
                 </button>
                 <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
-                <li role="menuitem">
-                    <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy Yesterday</a>
-                </li>
-                <li role="menuitem">
-                    <a class="dropdown-item" href="#">Copy From Date</a>
-                </li>
-                <li role="menuitem">
-                    <a class="dropdown-item" href="#">Copy To Date</a>
-                </li>
+                    <li role="menuitem">
+                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy From Date</a>
+                    </li>
+                    <li role="menuitem">
+                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy To Date</a>
+                    </li>
                 </ul >
             </div>
         </label>
@@ -49,5 +46,5 @@
 </div>
 
 <ng-template #template>
-    <app-copy-entry [Entry]="modalTracker" [CounterTypes]="getOrderedCounters()"></app-copy-entry>
+    <app-copy-entry [Entry]="modalTracker" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()"></app-copy-entry>
 </ng-template>

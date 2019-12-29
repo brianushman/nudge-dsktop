@@ -19,6 +19,7 @@ export class DataDisplayComponent implements OnInit {
   readonly counterType: string = 'counters-log';
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
+  modalDate:Date;
   openCounterIndex: number = 0;
 
   constructor(
@@ -172,6 +173,7 @@ export class DataDisplayComponent implements OnInit {
 
   openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker) {
     this.modalTracker = tracker;
+    this.modalDate = this.calendarService.currentDate;
     this.modalRef = this.modalService.show(template, { animated: true });
   }
 }

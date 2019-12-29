@@ -1,5 +1,5 @@
 <h2 class="header" title="Click to expand date picker." (click)="showDatePicker()"><i class="fa fa-calendar"></i>&nbsp; {{formatDate(selectedDate, 'MMMM')}}</h2>
-<input style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="datepickerDate" (onHidden)="changeDateByDate(datepickerDate)">
+<input style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [bsValue]="datepickerDate" [(ngModel)]="datepickerDate" (onHidden)="changeDateByDate(datepickerDate)">
 <div class="card-container">
     <label role="button" class="card arrows" target="_blank" rel="noopener" (click)="changeDateByDays(-1)">
         <i class="fa fa-chevron-circle-left fa-2x"></i>

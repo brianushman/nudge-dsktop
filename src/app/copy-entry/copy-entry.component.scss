@@ -50,7 +50,6 @@ select:focus {
 }
 
 .mdl-selectfield {
-    width: 240px;
     min-width: 80%;
 }
 
@@ -65,7 +64,7 @@ label {
 }
 
 .meal-text {
-    width: 80%;
+    width: 100%;
     font-size: $select-font-size;
     border-bottom: 1px solid $select-border-color;
 }

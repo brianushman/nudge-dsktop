@@ -98,3 +98,12 @@
   #dropdown-animated > li > a {
     font-weight: bold;
   }
+
+  .hack {
+    position: relative;
+  }
+  .hack .dropdown-menu {
+     left: auto !important;
+     right: 0px;
+   }
+  

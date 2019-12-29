@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import * as uuid from 'uuid';
 
 @Component({
@@ -12,11 +12,23 @@ export class MaterialInputComponent implements OnInit {
 
   @Input() Name: string;
   @Input() Width: string;
-  @Input() Value: any;
   @Input() Multiline: boolean = false;
   @Input() Required: boolean = false;
   @Input() Numeric: boolean = false;
   @Input() Time: boolean = false;
+
+  componentValue:any;
+  @Output()
+  valueChange = new EventEmitter<any>();
+  @Input()
+  get value(){
+    return this.componentValue;
+  }
+  set value(val) {
+    this.componentValue = val;
+    this.valueChange.emit(this.componentValue);
+  }
+
   uid:string;
 
   constructor() {

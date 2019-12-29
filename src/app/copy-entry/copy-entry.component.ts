@@ -49,8 +49,17 @@ export class CopyEntryComponent implements OnInit {
     return moment(date).format(format);
   }
 
-  private getCounterName(tracker:NudgeTracker):string {
+  private updateQuantity(trackerId:number, value:number) {
+    this.quantities.set(trackerId, value);
+  }
+
+  private getCounterName(trackerId:number):string {
+    let tracker = this.getTrackerById(trackerId);
     return tracker.name.substr(tracker.name.indexOf(' '));
+  }
+
+  private mapValues(index:number) {
+    return Array.from(this.quantities.values())[index];
   }
 
   private openCalendar() {
@@ -124,7 +133,7 @@ export class CopyEntryComponent implements OnInit {
         '/nudge-dsktop',
         'brianushman.github.io',
         true,
-        'Lax');
+        'Strict');
     }
   }
 }

@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         '/nudge-dsktop',
         'brianushman.github.io',
         true,
-        'Lax');
+        'Strict');
       this.cookieService.set(
         'nudge-api-token',
         this.registerForm.controls.token.value,
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
         '/nudge-dsktop',
         'brianushman.github.io',
         true,
-        'Lax');
+        'Strict');
     }
  
     if(this.Cancelable)

@@ -94,7 +94,7 @@ export class DataDisplayComponent implements OnInit {
         tracker.user.logs.push(data);
       }
       else {
-        tracker.user.logs.splice(1, 1, data);
+        tracker.user.logs.splice(0, 1, data);
       }
     });
   }

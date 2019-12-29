@@ -25,6 +25,7 @@ import { CopyEntryComponent } from './copy-entry/copy-entry.component';
 import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-rating.component'; 
 import { NudgeApiService } from './services/NudgeApiService';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { MapPipeValues } from './models/MapPipeValues';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     MaterialInputComponent,
     LoginComponent,
     CopyEntryComponent,
-    DailyHealthRatingComponent
+    DailyHealthRatingComponent,
+    MapPipeValues
   ],
   imports: [
     BrowserModule,

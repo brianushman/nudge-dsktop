@@ -19,8 +19,8 @@
 
 <label>Enter Portions...</label>
 <div class="counter-container">
-    <div class="counter" *ngFor="let tracker of CounterTypes">
-        <app-material-input [Name]="getCounterName(tracker)" [Value]="quantities.get(tracker.id)" [Numeric]="true"></app-material-input>
+    <div class="counter" *ngFor="let item of quantities| getValues">
+        <app-material-input [Name]="getCounterName(item.key)" [(value)]="item.val" [Numeric]="true" (valueChange)="updateQuantity(item.key, item.val)"></app-material-input>
     </div>
 </div>
 <div class="row mt-3 mr-2 pull-right">

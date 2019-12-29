@@ -106,7 +106,7 @@ export class NudgeApiService {
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number, date:Date = null):Observable<NudgeUserDataLog> {
-        var timestamp = (date != null) ? date : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
+        var timestamp = (date != null) ? moment(date) : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -202,9 +202,9 @@ export class NudgeApiService {
     }
     
     public updateTrackerQuestion(tracker:NudgeTracker, notes:string, date:Date = null):Observable<NudgeUserDataLog> {
-        if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
+        //if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
 
-        var timestamp = (date != null) ? date : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
+        var timestamp = (date != null) ? moment(date) : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)

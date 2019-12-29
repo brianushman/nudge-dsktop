@@ -45,42 +45,42 @@ export class CopyEntryComponent implements OnInit {
     });
   }
 
-  private formatDate(date:Date, format:string):string {
+  formatDate(date:Date, format:string):string {
     return moment(date).format(format);
   }
 
-  private updateQuantity(trackerId:number, value:number) {
+  updateQuantity(trackerId:number, value:number) {
     this.quantities.set(trackerId, value);
   }
 
-  private getCounterName(trackerId:number):string {
+  getCounterName(trackerId:number):string {
     let tracker = this.getTrackerById(trackerId);
     return tracker.name.substr(tracker.name.indexOf(' '));
   }
 
-  private mapValues(index:number) {
+  mapValues(index:number) {
     return Array.from(this.quantities.values())[index];
   }
 
-  private openCalendar() {
+  openCalendar() {
     this.datepicker.show();
   }
 
-  private submit() {
+  submit() {
     this.copyMeal();
     this.saveMeal(this.Entry.user.logs[0].response, this.quantities);
   }
 
-  private cancel() {
+  cancel() {
     this.onCancel.emit();
   }
 
-  private popRef() {
+  popRef() {
     this.refCount--;
     if(this.refCount <= 0) this.onSave.emit(this.quantities);
   }
 
-  private copyMeal() {
+  copyMeal() {
     this.refCount = this.quantities.keys.length + 1;
     this.nudgeApiService.updateTrackerQuestion(this.copyEntry, this.Entry.user.logs[0].response, this.EntryDate).subscribe(x => this.popRef());
     this.quantities.forEach((value: number, key: number) => {
@@ -89,14 +89,14 @@ export class CopyEntryComponent implements OnInit {
     });
   }
 
-  private getTrackerById(id:number):NudgeTracker {
+  getTrackerById(id:number):NudgeTracker {
     for(let i = 0; i < this.CounterTypes.length; ++i) {
       if(this.CounterTypes[i].id == id) return this.CounterTypes[i];
     }
     return null;
   }
 
-  private getMeal(value:string):Map<number,number> {
+  getMeal(value:string):Map<number,number> {
     let cookieString = this.cookieService.get(this.cookieName);
     if(cookieString == "") {
       let map = new Map<number,number>();
@@ -112,7 +112,7 @@ export class CopyEntryComponent implements OnInit {
     return new Map<number,number>(JSON.parse(mealString));
   }
 
-  private saveMeal(mealName:string, value: Map<number,number>) {
+  saveMeal(mealName:string, value: Map<number,number>) {
     let cookieString = this.cookieService.get(this.cookieName);
     if(cookieString == "") return null;
     let cookieValue:Map<string,string> = new Map(JSON.parse(cookieString));
@@ -121,7 +121,7 @@ export class CopyEntryComponent implements OnInit {
     this.setCookie(this.cookieName, JSON.stringify(Array.from(cookieValue.entries())));
   }
 
-  private setCookie(name:string, value:string):void {
+  setCookie(name:string, value:string):void {
     if(!environment.production) {
       this.cookieService.set(name, value);
     }

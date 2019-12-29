@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChildren, QueryList, TemplateRef  } from '@angular/core';
 import { NudgeApiService } from '../services/NudgeApiService';
-import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
+import { NudgeTracker, NudgeUserDataLog } from '../models/NudgeTracker';
 import { CalendarService } from '../calendar/calendar.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -174,6 +174,10 @@ export class DataDisplayComponent implements OnInit {
   openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker) {
     this.modalTracker = tracker;
     this.modalDate = this.calendarService.currentDate;
-    this.modalRef = this.modalService.show(template, { animated: true });
+    this.modalRef = this.modalService.show(template, { animated: true, keyboard: false, backdrop: 'static' });
+  }
+
+  closeCopyModal() {
+    this.modalRef.hide();
   }
 }

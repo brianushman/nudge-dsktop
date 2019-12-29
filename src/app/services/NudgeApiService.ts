@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { NudgeTracker, NudgeUserDataLog } from '../models/nudge-tracker';
+import { NudgeTracker, NudgeUserDataLog } from '../models/NudgeTracker';
 import { Observable } from 'rxjs/internal/Observable';
 import { TrackerType } from '../models/TrackerTypeEnum';
 import { CookieService } from 'ngx-cookie-service';
@@ -105,8 +105,8 @@ export class NudgeApiService {
         return this.trackerData.get(this.getDateFormat(date));
     }
 
-    public createTrackerCounter(tracker:NudgeTracker, quantity:number):Observable<NudgeUserDataLog> {
-        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
+    public createTrackerCounter(tracker:NudgeTracker, quantity:number, date:Date = null):Observable<NudgeUserDataLog> {
+        var timestamp = (date != null) ? date : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -201,10 +201,10 @@ export class NudgeApiService {
         return this.http.put<NudgeUserDataLog>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs/${data.id}`, data, {headers});
     }
     
-    public updateTrackerQuestion(tracker:NudgeTracker, notes:string):Observable<NudgeUserDataLog> {
+    public updateTrackerQuestion(tracker:NudgeTracker, notes:string, date:Date = null):Observable<NudgeUserDataLog> {
         if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
 
-        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
+        var timestamp = (date != null) ? date : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)

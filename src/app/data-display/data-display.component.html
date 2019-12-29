@@ -46,5 +46,5 @@
 </div>
 
 <ng-template #template>
-    <app-copy-entry [Entry]="modalTracker" [EntryDate]="modalDate" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()"></app-copy-entry>
+    <app-copy-entry [Entry]="modalTracker" [EntryDate]="modalDate" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()" (onCancel)="closeCopyModal()"></app-copy-entry>
 </ng-template>

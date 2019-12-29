@@ -53,6 +53,10 @@ select:focus {
     min-width: 80%;
 }
 
+input {
+    font-size: $select-font-size !important;
+}
+
 label {
     font-size: 20px;
     font-weight: bold;

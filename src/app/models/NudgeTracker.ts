@@ -11,7 +11,6 @@ export class NudgeMetadata {
     tags: string[];
     log_format: string;
     resource: string;
-    //resources: string[];
     config: string;
     deduplicated: boolean;
 }

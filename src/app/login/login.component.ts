@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
     }
 
     if(!environment.production) {
-      this.cookieService.set('nudge-api-key', this.registerForm.controls.key.value);
-      this.cookieService.set('nudge-api-token', this.registerForm.controls.token.value);
+      this.cookieService.set('nudge-api-key', this.registerForm.controls.key.value, 100000, "/", 'localhost', false, "Lax");
+      this.cookieService.set('nudge-api-token', this.registerForm.controls.token.value, 100000, "/", 'localhost', false, "Lax");
     }
     else {
       this.cookieService.set(

@@ -123,7 +123,7 @@ export class CopyEntryComponent implements OnInit {
 
   setCookie(name:string, value:string):void {
     if(!environment.production) {
-      this.cookieService.set(name, value);
+      this.cookieService.set(name, value, null, null, null, true, "Strict");
     }
     else {
       this.cookieService.set(

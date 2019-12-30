@@ -41,7 +41,8 @@ export class CopyEntryComponent implements OnInit {
     
     this.bsConfig = Object.assign({}, { 
       containerClass: 'theme-dark-blue',
-      adaptivePosition: true
+      adaptivePosition: true,
+      showWeekNumbers:false
     });
   }
 

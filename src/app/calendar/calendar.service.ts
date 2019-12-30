@@ -11,6 +11,7 @@ export class CalendarService {
   constructor() { }
 
   updateDate(date: Date) {
+    if(this.currentDate == date) return;
     this.currentDate = date;
     this.dateSource.next(date);
   }

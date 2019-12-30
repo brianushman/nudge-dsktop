@@ -41,7 +41,7 @@ export class NudgeApiService {
             // check for a cached version before retrieving from the API.
             if(this.trackerData.get(dateStr) == null) {
                 this.notReady.emit();
-                let range = this.getMonthDateRange(moment().toDate(), 1);
+                let range = this.getMonthDateRange(moment(newDate).toDate(), 1);
                 this.getDataRange(range.start, range.end).subscribe((data:NudgeTracker[]) => {
                     this.trackerData = this.bufferTrackerData(range.start, range.end, data, this.trackerData);
                     this.ready.emit();

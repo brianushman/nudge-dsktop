@@ -19,7 +19,7 @@ export class CalendarComponent implements OnInit {
   constructor(private calendarService: CalendarService) { }
 
   ngOnInit() {   
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue' });     
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', showWeekNumbers:false });     
     this.calendarService.date.subscribe(newDate => {
       this.selectedDate = newDate;
       this.datepickerDate = newDate;

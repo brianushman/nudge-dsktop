@@ -180,4 +180,9 @@ export class DataDisplayComponent implements OnInit {
   closeCopyModal() {
     this.modalRef.hide();
   }
+
+  getFontSizeClass(tracker:NudgeTracker) {
+    let fontString = `${this.getCounterEnteredQuantity(tracker)}/${this.getCounterTargetQuantity(tracker)}`;
+    return fontString.length <= 5 ? 'small-font' : 'large-font';
+  }
 }

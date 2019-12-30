@@ -173,7 +173,6 @@ export class NudgeApiService {
     }
 
     public updateTrackerCounter(tracker:NudgeTracker, log:NudgeUserDataLog):Observable<NudgeUserDataLog> {
-        var timestamp = moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -182,8 +181,8 @@ export class NudgeApiService {
             .set("x-requested-with", "XMLHttpRequest")
 
         let data:IHttpPostTracker = {
-            id: tracker.user.logs[0].id.toString(),
-            serverId: tracker.user.logs[0].id,
+            id: log.id.toString(),
+            serverId: log.id,
             trackerId: tracker.id,
             trackerType: TrackerType.Counter,
             source: "nudge",

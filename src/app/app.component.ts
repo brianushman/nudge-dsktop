@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
     private spinner: NgxSpinnerService) {
       this.nudgeApiService.notReady.subscribe(() => this.spinner.show());
       this.nudgeApiService.ready.subscribe(() => this.spinner.hide());
+      this.nudgeApiService.Initialize();
   }
 
   ngOnInit(): void {

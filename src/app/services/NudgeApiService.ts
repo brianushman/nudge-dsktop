@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { NudgeTracker, NudgeUserDataLog } from '../models/NudgeTracker';
+import { NudgeTracker, NudgeUserDataLog, NudgeUserData } from '../models/NudgeTracker';
 import { Observable } from 'rxjs/internal/Observable';
 import { TrackerType } from '../models/TrackerTypeEnum';
 import { CookieService } from 'ngx-cookie-service';
@@ -22,43 +22,48 @@ export class NudgeApiService {
     private userInfo: INudgeUserInfo = null;
     private trackerData:Map<string, NudgeTracker[]> =  new Map();
     
-    @Output() notReady = new EventEmitter<NudgeTracker[]>();
-    @Output() ready = new EventEmitter<NudgeTracker[]>();
-    
+    @Output() notReady = new EventEmitter<void>();
+    @Output() ready = new EventEmitter<void>();
+
     constructor(
         private http:HttpClient,
         private cookieService:CookieService,
         private calendarService:CalendarService) {
-            
-            this.calendarService.date.subscribe(newDate => {
-                if(!this.serviceInitialized()) return;
-                var dateStr = this.getDateFormat(newDate);
-                
-                // check for a cached version before retrieving from the API.
-                if(this.trackerData.get(dateStr) != null) {
-                    this.ready.emit(this.trackerData.get(dateStr));
-                }
-                else {
-                    this.notReady.emit();
-                    this.getData(newDate).subscribe(data => 
-                    {
-                        this.trackerData.set(dateStr, data);
-                        this.ready.emit(data);
-                    });
-                }
-            });
-        
             this.apiKey = cookieService.get('nudge-api-key');
             this.apiToken = cookieService.get('nudge-api-token');
-            this.notReady.emit();
-            this.getUserInfo().subscribe(user => {
-                this.userInfo = user;
-                let now = moment().toDate();
-                this.getData(now).subscribe(data => {
-                    this.trackerData.set(this.getDateFormat(now), data);
-                    this.ready.emit(data);
+    }
+
+    public Initialize():void {
+        this.calendarService.date.subscribe(newDate => {
+            if(!this.serviceInitialized()) return;
+            var dateStr = this.getDateFormat(newDate);
+            
+            // check for a cached version before retrieving from the API.
+            if(this.trackerData.get(dateStr) == null) {
+                this.notReady.emit();
+                let range = this.getMonthDateRange(moment().toDate(), 1);
+                this.getDataRange(range.start, range.end).subscribe((data:NudgeTracker[]) => {
+                    this.trackerData = this.bufferTrackerData(range.start, range.end, data, this.trackerData);
+                    this.ready.emit();
                 });
+            }
+        });
+    
+        this.notReady.emit();
+        this.getUserInfo().subscribe(user => {
+            this.userInfo = user;
+            let range = this.getMonthDateRange(moment().toDate(), 1);
+            this.getDataRange(range.start, range.end).subscribe((data:NudgeTracker[]) => {
+                this.trackerData = this.bufferTrackerData(range.start, range.end, data);
+                this.ready.emit();
             });
+        });
+    }
+
+    private getMonthDateRange(date:Date, quantity:number) {
+        let startDate:Date = moment(date).subtract(quantity, 'months').toDate();
+        let endDate:Date = moment(date).add(quantity, 'months').toDate();
+        return { start: startDate, end: endDate };
     }
 
     private getUserInfo():Observable<INudgeUserInfo> {
@@ -89,8 +94,22 @@ export class NudgeApiService {
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/${this.userInfo.id}/trackers?log_date_from=${dateStr}&log_date_to=${dateStr}`, {headers});
     }
 
+    private getDataRange(startDate:Date, endDate:Date) {
+        const startDateStr:string = this.getDateFormat(startDate);
+        const endDateStr:string = this.getDateFormat(endDate);
+
+        const headers = new HttpHeaders()
+            .set("Accept", "application/json")
+            .set("x-api-token", this.apiToken)
+            .set("x-api-key", this.apiKey)
+            .set("Accept-Language", "en-us")
+            .set("x-requested-with", "XMLHttpRequest")
+
+        return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/${this.userInfo.id}/trackers?log_date_from=${startDateStr}&log_date_to=${endDateStr}`, {headers});
+    }
+
     public serviceInitialized():boolean {
-        return this.userInfo != null;
+        return this.userInfo != null;// && Array.from(this.trackerData.keys()).length > 0;
     }
 
     public UserInfo():INudgeUserInfo {
@@ -202,9 +221,12 @@ export class NudgeApiService {
     }
     
     public updateTrackerQuestion(tracker:NudgeTracker, notes:string, date:Date = null):Observable<NudgeUserDataLog> {
-        //if(tracker.user.logs.length > 0 && tracker.user.logs[0].response == notes) return EMPTY;
-
         var timestamp = (date != null) ? moment(date) : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
+        
+        if(tracker.user.logs.length > 0 && 
+            tracker.user.logs[0].response == notes &&
+            moment(tracker.user.logs[0].user_time).format('YYYYMMDD') == moment(timestamp).format('YYYYMMDD')) return EMPTY;
+        
         const headers = new HttpHeaders()
             .set("Accept", "application/json")
             .set("x-api-token", this.apiToken)
@@ -288,5 +310,30 @@ export class NudgeApiService {
             healthTracker.user.logs[0].quantity = value;
             return this.updateTrackerCounter(healthTracker, healthTracker.user.logs[0]);
         }
+    }
+
+    private bufferTrackerData(startDate:Date, endDate:Date, range:NudgeTracker[], existingMap:Map<string, NudgeTracker[]> = null) {
+        let buffer:Map<string, NudgeTracker[]> = existingMap != null ? existingMap : new Map<string, NudgeTracker[]>();
+        let currentDate = moment(startDate);
+        do {
+            let trackers:NudgeTracker[] = [];
+            range.forEach((tracker:NudgeTracker) => {
+                let newTracker = new NudgeTracker();
+                newTracker.id = tracker.id;
+                newTracker.meta = tracker.meta;
+                newTracker.name = tracker.name;
+                newTracker.palettes_id = tracker.palettes_id;
+                newTracker.user = new NudgeUserData();
+                newTracker.user.id = tracker.user.id;
+                newTracker.user.settings = tracker.user.settings;
+                newTracker.user.logs = tracker.user.logs.filter((item:NudgeUserDataLog) => {
+                    return moment(item.user_time).format('YYYYMMDD') == currentDate.format('YYYYMMDD');
+                });
+                trackers.push(newTracker);
+            });
+            buffer.set(this.getDateFormat(currentDate.toDate()), trackers);
+            currentDate.add(1, 'days');
+        } while(currentDate.toDate() <= endDate);
+        return(buffer);
     }
 }

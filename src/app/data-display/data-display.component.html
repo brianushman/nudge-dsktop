@@ -33,10 +33,10 @@
                 </button>
                 <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
                     <li role="menuitem">
-                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy From Date</a>
+                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker, true)">Copy From Date</a>
                     </li>
                     <li role="menuitem">
-                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Copy To Date</a>
+                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker, false)">Copy To Date</a>
                     </li>
                 </ul >
             </div>
@@ -46,5 +46,5 @@
 </div>
 
 <ng-template #template>
-    <app-copy-entry [Entry]="modalTracker" [EntryDate]="modalDate" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()" (onCancel)="closeCopyModal()"></app-copy-entry>
+    <app-copy-entry [Entry]="modalTracker" [EntryDate]="modalDate" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()" [CopyType]="modalCopyType" (onCancel)="closeCopyModal()" (onSave)="saveCopyModal($event)"></app-copy-entry>
 </ng-template>

@@ -269,7 +269,10 @@ export class NudgeApiService {
             activity_id: null
         }
 
-        if(tracker.user.logs.length == 0) {
+        // we really need a way to see when the date is different than the log
+        // get the actual tracker log instead of the date we aren't actually posting to.
+        if(tracker.user.logs.length == 0 || 
+            moment(tracker.user.logs[0].user_time).format('YYYYMMDD') != moment(timestamp).format('YYYYMMDD')) {
             return this.http.post<NudgeUserDataLog>(this.baseUrl + `/5/trackers/${tracker.id.toString()}/logs`, data, {headers});
         }
         else {

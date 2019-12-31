@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialInputComponent } from '../material-input/material-input.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { NudgeCopyType } from '../models/NudgeCopyType';
 
 @Component({
   selector: 'app-data-display',
@@ -20,6 +21,7 @@ export class DataDisplayComponent implements OnInit {
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
   modalDate:Date;
+  modalCopyType:NudgeCopyType;
   openCounterIndex: number = 0;
 
   constructor(
@@ -37,7 +39,7 @@ export class DataDisplayComponent implements OnInit {
   }
 
   isToday():boolean {
-    return moment().diff(moment(this.calendarService.currentDate), 'days') == 0;
+    return moment().format('YYYYMMDD') == moment(this.calendarService.currentDate).format('YYMMDD');
   }
 
   getOrderedTextFields() : NudgeTracker[] {
@@ -171,14 +173,20 @@ export class DataDisplayComponent implements OnInit {
           trackerName.toUpperCase().indexOf("EVENING") >= 0;
   }
 
-  openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker) {
+  openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker, isCopyFrom:boolean) {
     this.modalTracker = tracker;
     this.modalDate = this.calendarService.currentDate;
+    this.modalCopyType = isCopyFrom ? NudgeCopyType.From : NudgeCopyType.To;
     this.modalRef = this.modalService.show(template, { animated: true, keyboard: false, backdrop: 'static' });
   }
 
   closeCopyModal() {
     this.modalRef.hide();
+  }
+
+  saveCopyModal(newDate:Date) {
+    this.modalRef.hide();
+    this.calendarService.updateDate(newDate);
   }
 
   getFontSizeClass(tracker:NudgeTracker) {

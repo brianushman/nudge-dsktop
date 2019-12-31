@@ -22,11 +22,12 @@ export class CopyEntryComponent implements OnInit {
   @Input() QuestionTypes:NudgeTracker[];
 
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<Map<number, number>>();
+  @Output() onSave = new EventEmitter<Date>();
 
   refCount:number = 0;
   copyEntry:NudgeTracker;
   bsConfig: Partial<BsDatepickerConfig>;
+  disabledDates: Date[];
   quantities:Map<number,number>;
   cookieName = 'nudgedsktop-copymeal-cache';
 
@@ -38,11 +39,19 @@ export class CopyEntryComponent implements OnInit {
   ngOnInit() {        
     this.copyEntry = this.Entry;
     this.quantities = this.getMeal(this.Entry.user.logs[0].response);
+
+    this.disabledDates = [
+      moment(this.EntryDate).toDate()
+    ];
+
+    this.EntryDate = (this.CopyType == NudgeCopyType.From) ? 
+        this.getStartingCopyFromDate() : this.getStartingCopyToDate();
     
     this.bsConfig = Object.assign({}, { 
       containerClass: 'theme-dark-blue',
       adaptivePosition: true,
-      showWeekNumbers:false
+      showWeekNumbers:false,
+      selectFromOtherMonth: true
     });
   }
 
@@ -64,12 +73,13 @@ export class CopyEntryComponent implements OnInit {
   }
 
   openCalendar() {
+    this.datepicker.bsValue = this.EntryDate;
     this.datepicker.show();
   }
 
   submit() {
-    this.copyMeal();
     this.saveMeal(this.Entry.user.logs[0].response, this.quantities);
+    this.copyMeal();
   }
 
   cancel() {
@@ -78,7 +88,7 @@ export class CopyEntryComponent implements OnInit {
 
   popRef() {
     this.refCount--;
-    if(this.refCount <= 0) this.onSave.emit(this.quantities);
+    if(this.refCount <= 0) this.onSave.emit(this.EntryDate);
   }
 
   copyMeal() {
@@ -115,8 +125,7 @@ export class CopyEntryComponent implements OnInit {
 
   saveMeal(mealName:string, value: Map<number,number>) {
     let cookieString = this.cookieService.get(this.cookieName);
-    if(cookieString == "") return null;
-    let cookieValue:Map<string,string> = new Map(JSON.parse(cookieString));
+    let cookieValue:Map<string,string> = (cookieString == "") ? new Map() : new Map(JSON.parse(cookieString));
 
     cookieValue.set(mealName, JSON.stringify(Array.from(value.entries())));
     this.setCookie(this.cookieName, JSON.stringify(Array.from(cookieValue.entries())));
@@ -124,7 +133,7 @@ export class CopyEntryComponent implements OnInit {
 
   setCookie(name:string, value:string):void {
     if(!environment.production) {
-      this.cookieService.set(name, value, null, null, null, true, "Strict");
+      this.cookieService.set(name, value, 100000, "/", 'localhost', false, "Lax");
     }
     else {
       this.cookieService.set(
@@ -136,5 +145,15 @@ export class CopyEntryComponent implements OnInit {
         true,
         'Strict');
     }
+  }
+
+  private getStartingCopyFromDate():Date {
+    if(moment().format('YYYYMMDD') == moment(this.EntryDate).format('YYYYMMDD')) return moment().subtract(1, 'days').toDate();
+    else return moment().toDate();
+  }
+
+  private getStartingCopyToDate():Date {
+    if(moment().format('YYYYMMDD') == moment(this.EntryDate).format('YYYYMMDD')) return moment().add(1, 'days').toDate();
+    else return moment().toDate();
   }
 }

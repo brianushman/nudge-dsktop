@@ -7,8 +7,8 @@
             </select>
         </div>
     </div>
-    <div class="col-sm-6 pl-2" (click)="openCalendar()">
-        <input id="calendar-popup" style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [bsValue]="EntryDate" [(ngModel)]="EntryDate">
+    <div class="col-sm-6 pl-2 calender-container" (click)="openCalendar()">
+        <input id="calendar-popup" style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="EntryDate" [datesDisabled]="disabledDates">
         <label class="copy-label">Copy To Date</label>
         <p class="meal-text">{{formatDate(EntryDate, 'dddd, MMMM Do')}}</p>
     </div>

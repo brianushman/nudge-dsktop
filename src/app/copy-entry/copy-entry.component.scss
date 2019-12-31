@@ -53,8 +53,8 @@ select:focus {
     min-width: 80%;
 }
 
-input {
-    font-size: $select-font-size !important;
+app-material-input {
+    font-size: $select-font-size;
 }
 
 label {

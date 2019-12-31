@@ -6,6 +6,7 @@ import { BsDatepickerDirective, BsDatepickerConfig } from 'ngx-bootstrap/datepic
 import * as moment from 'moment';
 import { NudgeCopyType } from '../models/NudgeCopyType';
 import { environment } from 'src/environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-copy-entry',
@@ -33,7 +34,8 @@ export class CopyEntryComponent implements OnInit {
 
   constructor(
     private cookieService:CookieService,
-    private nudgeApiService:NudgeApiService) {
+    private nudgeApiService:NudgeApiService,
+    private toastr: ToastrService) {
     }
 
   ngOnInit() {        
@@ -72,12 +74,26 @@ export class CopyEntryComponent implements OnInit {
     return Array.from(this.quantities.values())[index];
   }
 
+  getMealText():string {
+    if(this.Entry.user.logs.length == 0) return null;
+    return this.Entry.user.logs[0].response;
+  }
+
+  onDateChanged(value:Date) {
+    
+  }
+
   openCalendar() {
     this.datepicker.bsValue = this.EntryDate;
     this.datepicker.show();
   }
 
   submit() {
+    if(this.getMealText() == null || this.getMealText().length == 0) {
+      this.toastr.error('The meal on your chosen date does not have an entry. Choose a new date at the top of this dialog box.', 'Error');
+      return;
+    }
+
     this.saveMeal(this.Entry.user.logs[0].response, this.quantities);
     this.copyMeal();
   }

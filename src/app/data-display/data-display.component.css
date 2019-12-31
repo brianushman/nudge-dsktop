@@ -99,8 +99,16 @@
 
   .copy-question {
     font-size: 14px;
-
   }
+
+  a.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+ }
+
+ li.disabled {
+  cursor: not-allowed;
+ }
 
   #dropdown-animated > li > a {
     font-weight: bold;

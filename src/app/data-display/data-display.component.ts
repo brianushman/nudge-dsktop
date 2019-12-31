@@ -193,4 +193,9 @@ export class DataDisplayComponent implements OnInit {
     let fontString = `${this.getCounterEnteredQuantity(tracker)}/${this.getCounterTargetQuantity(tracker)}`;
     return fontString.length <= 5 ? 'small-font' : 'large-font';
   }
+
+  getCopyToToolTipText(tracker:NudgeTracker) {
+    if(this.getTextFieldText(tracker).length != 0) return "";
+    return 'Cannot copy a meal that does not contain text'
+  }
 }

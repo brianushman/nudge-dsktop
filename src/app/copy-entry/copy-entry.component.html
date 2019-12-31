@@ -8,14 +8,14 @@
         </div>
     </div>
     <div class="col-sm-6 pl-2 calender-container" (click)="openCalendar()">
-        <input id="calendar-popup" style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="EntryDate" [datesDisabled]="disabledDates">
+        <input id="calendar-popup" style="height: 0; opacity: 0; padding: 0.05em;" class="form-control" #drp="bsDatepicker" bsDatepicker [bsConfig]="bsConfig" [(ngModel)]="EntryDate" [datesDisabled]="disabledDates" (bsValueChange)="onDateChanged($event)">
         <label class="copy-label">Copy To Date</label>
         <p class="meal-text">{{formatDate(EntryDate, 'dddd, MMMM Do')}}</p>
     </div>
 </div>
 
 <label>Meal Contents</label>
-<p class="meal-text">{{Entry.user.logs[0].response}}</p>
+<p class="meal-text">{{getMealText()}}</p>
 
 <label>Enter Portions...</label>
 <div class="counter-container">

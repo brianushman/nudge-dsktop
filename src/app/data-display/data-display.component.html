@@ -23,7 +23,7 @@
         </accordion-group>
     </accordion>
 </div>
-<div class="col-sm-7">
+<div class="col-sm-7" unselectable="on" onselectstart="return false">
     <div class="text-field" *ngFor="let tracker of getOrderedTextFields()">
         <label>
             {{tracker.name}}
@@ -35,8 +35,8 @@
                     <li role="menuitem">
                         <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker, true)">Copy From Date</a>
                     </li>
-                    <li role="menuitem">
-                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker, false)">Copy To Date</a>
+                    <li role="menuitem" [class.disabled]="getTextFieldText(tracker).length == 0" [title]="getCopyToToolTipText(tracker)">
+                        <a class="dropdown-item" href="#" [class.disabled]="getTextFieldText(tracker).length == 0" (click)="openCopyModal(template, tracker, false)">Copy To Date</a>
                     </li>
                 </ul >
             </div>

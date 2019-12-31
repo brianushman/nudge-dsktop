@@ -16,7 +16,7 @@ html {
   border: 0;
   border-bottom: 1px solid #d2d2d2;
   outline: 0;
-  font-size: 16px;
+  font-size: inherit;
   color: #212121;
   padding: 7px 0;
   background: transparent;

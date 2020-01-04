@@ -28,6 +28,7 @@
     "moment": "^2.24.0",
     "ngx-autosize": "^1.7.2",
     "ngx-bootstrap": "^5.2.0",
+    "ngx-checkbox": "0.0.8",
     "ngx-cookie-service": "^2.2.0",
     "ngx-icons": "^0.3.0",
     "ngx-spinner": "^8.1.0",

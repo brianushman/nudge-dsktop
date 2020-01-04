@@ -35,11 +35,11 @@
                     <li role="menuitem" [class.disabled]="getTextFieldText(tracker).length == 0" [title]="getCopyToToolTipText(tracker)">
                         <a class="dropdown-item" href="#" [class.disabled]="getTextFieldText(tracker).length == 0" (click)="openCopyModal(template, tracker)">Copy To Date</a>
                     </li>
-                    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="#drp-down-menu">
-                        <a dropdownToggle tabindex="-1" class="dropdown-item dropdown-toggle" href="#" (click)="false">Quick Copy <span class="caret"></span></a>
-                        <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
-                            <li role="menuitem">
-                                <a class="dropdown-item" href="#" (click)="alert('cliked first item')">First Item</a>
+                    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="#drp-down-menu" [class.disabled]="getQuickCopyMealNames().length == 0">
+                        <a dropdownToggle tabindex="-1" class="dropdown-item dropdown-toggle" href="#" (click)="false" [class.disabled]="getQuickCopyMealNames().length == 0">Quick Copy <span class="caret"></span></a>
+                        <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated" [hidden]="getQuickCopyMealNames().length == 0">
+                            <li role="menuitem" *ngFor="let meal of getQuickCopyMealNames()">
+                                <a class="dropdown-item" href="#" (click)="alert('cliked first item')">{{meal}}</a>
                             </li>
                         </ul>
                     </li>

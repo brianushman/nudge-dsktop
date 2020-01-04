@@ -195,4 +195,8 @@ export class DataDisplayComponent implements OnInit {
     if(this.getTextFieldText(tracker).length != 0) return "";
     return 'Cannot copy a meal that does not contain text'
   }
+
+  getQuickCopyMealNames():string[] {
+    return this.nudgeApiService.QuickCopyMeals();
+  }
 }

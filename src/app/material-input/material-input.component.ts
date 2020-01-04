@@ -16,6 +16,7 @@ export class MaterialInputComponent implements OnInit {
   @Input() Required: boolean = false;
   @Input() Numeric: boolean = false;
   @Input() Time: boolean = false;
+  @Input() MaxLength: number = 10000;
 
   componentValue:any;
   @Output()

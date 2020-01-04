@@ -8,7 +8,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { INudgeUserInfo } from '../models/INudgeUserInfo';
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import { CalendarService } from '../calendar/calendar.service';
-import { EMPTY } from 'rxjs'
+import { EMPTY } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +18,7 @@ import { EMPTY } from 'rxjs'
 export class NudgeApiService {
 
     private baseUrl:string = 'https://api.nudgeyourself.com';
+    private quickCopyCookieName = 'nudgedsktop-quickcopy-cache';
     private apiKey:string;
     private apiToken:string;
     private userInfo: INudgeUserInfo = null;
@@ -108,6 +110,22 @@ export class NudgeApiService {
         return this.http.get<NudgeTracker[]>(this.baseUrl + `/5/users/${this.userInfo.id}/trackers?log_date_from=${startDateStr}&log_date_to=${endDateStr}`, {headers});
     }
 
+    public setCookie(name:string, value:string):void {
+        if(!environment.production) {
+          this.cookieService.set(name, value, 100000, "/", 'localhost', false, "Lax");
+        }
+        else {
+          this.cookieService.set(
+            name, 
+            value, 
+            100000,
+            '/nudge-dsktop',
+            'brianushman.github.io',
+            true,
+            'Strict');
+        }
+      }
+
     public serviceInitialized():boolean {
         return this.userInfo != null;// && Array.from(this.trackerData.keys()).length > 0;
     }
@@ -130,6 +148,41 @@ export class NudgeApiService {
             if(trackers[i].id == id) return trackers[i];
         }
         return null;
+    }
+
+    public QuickCopyMeals(quickCopyName:string = null, mealName:string = null):string[] {
+        if(quickCopyName != null && quickCopyName.length > 0 && 
+            mealName != null && mealName.length > 0) {
+            let cookieValue = this.cookieService.get(this.quickCopyCookieName);
+            let map:Map<string,string> = cookieValue.length > 0 ? new Map(JSON.parse(cookieValue)) : new Map();
+            map.set(quickCopyName, mealName);
+            this.setCookie(this.quickCopyCookieName, JSON.stringify(map));
+        }
+
+        if(this.cookieService.get(this.quickCopyCookieName).length == 0) return [];
+        let cache:Map<string,string> = new Map(JSON.parse(this.cookieService.get(this.quickCopyCookieName)));
+        return Array.from(cache.keys());
+    }
+
+    public QuickCopyNewMeal(quickCopyId:string, date:Date, id:number):boolean {
+        let quickCopyCache:Map<string, string> = new Map(JSON.parse(this.cookieService.get(this.quickCopyCookieName)));
+        let mealCache:Map<string, string> = new Map<string, string>(JSON.parse(this.cookieService.get('nudgedsktop-copymeal-cache')));
+
+        if(quickCopyCache.get(quickCopyId) == null || quickCopyCache.get(quickCopyId).length == 0) return false;
+        let mealId:string = quickCopyCache.get(quickCopyId);
+
+        let mealName = mealCache.get(mealId);
+        if(mealName == null || mealName.length == 0) return false;
+        let counterValues = new Map<number,number>(JSON.parse(mealName));
+
+        let questionTracker = this.TrackerDataByDateAndId(date, id);
+        if(questionTracker == null) return false;
+        this.updateTrackerQuestion(questionTracker, mealName, date).subscribe(x => questionTracker.user.logs.splice(0, 1, x));
+        counterValues.forEach((id:number, value:number) => {
+            let tracker = this.TrackerDataByDateAndId(date, id);
+            this.createTrackerCounter(tracker, value, date).subscribe(x => tracker.user.logs.push(x));
+        });
+        return true;
     }
 
     public createTrackerCounter(tracker:NudgeTracker, quantity:number, date:Date = null):Observable<NudgeUserDataLog> {

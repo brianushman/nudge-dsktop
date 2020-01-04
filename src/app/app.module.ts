@@ -26,6 +26,7 @@ import { DailyHealthRatingComponent } from './daily-health-rating/daily-health-r
 import { NudgeApiService } from './services/NudgeApiService';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { MapPipeValues } from './models/MapPipeValues';
+import { NgxCheckboxModule } from 'ngx-checkbox';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MapPipeValues } from './models/MapPipeValues';
     ToastrModule.forRoot(),
     ReactiveFormsModule,
     BsDropdownModule.forRoot(),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgxCheckboxModule
   ],
   providers: [CookieService, NudgeApiService],
   bootstrap: [AppComponent],

@@ -4,7 +4,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { NudgeApiService } from '../services/NudgeApiService';
 import { BsDatepickerDirective, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
-import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -29,6 +28,8 @@ export class CopyEntryComponent implements OnInit {
   disabledDates: Date[];
   quantities:Map<number,number>;
   cookieName = 'nudgedsktop-copymeal-cache';
+  quickCopyEnabled:boolean = false;
+  quickCopyMealName:string;
 
   constructor(
     private cookieService:CookieService,
@@ -127,6 +128,10 @@ export class CopyEntryComponent implements OnInit {
     return null;
   }
 
+  quickCopyEnabledChanged(value:boolean) {
+    this.quickCopyEnabled = !this.quickCopyEnabled;
+  }
+
   private getMeal(value:string):Map<number,number> {
     let cookieString = this.cookieService.get(this.cookieName);
     if(cookieString == "") {
@@ -144,7 +149,7 @@ export class CopyEntryComponent implements OnInit {
     let cookieValue:Map<string,string> = (cookieString == "") ? new Map() : new Map(JSON.parse(cookieString));
 
     cookieValue.set(mealName, JSON.stringify(Array.from(value.entries())));
-    this.setCookie(this.cookieName, JSON.stringify(Array.from(cookieValue.entries())));
+    this.nudgeApiService.setCookie(this.cookieName, JSON.stringify(Array.from(cookieValue.entries())));
   }
 
   private buildEmptyMealTemplate():Map<number,number> {
@@ -153,22 +158,6 @@ export class CopyEntryComponent implements OnInit {
       map.set(counter.id, 0);
     });
     return map;
-  }
-
-  private setCookie(name:string, value:string):void {
-    if(!environment.production) {
-      this.cookieService.set(name, value, 100000, "/", 'localhost', false, "Lax");
-    }
-    else {
-      this.cookieService.set(
-        name, 
-        value, 
-        100000,
-        '/nudge-dsktop',
-        'brianushman.github.io',
-        true,
-        'Strict');
-    }
   }
 
   private getCopyToDate():Date {

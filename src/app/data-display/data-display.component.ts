@@ -6,7 +6,6 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { MaterialInputComponent } from '../material-input/material-input.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { NudgeCopyType } from '../models/NudgeCopyType';
 
 @Component({
   selector: 'app-data-display',
@@ -21,7 +20,6 @@ export class DataDisplayComponent implements OnInit {
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
   modalDate:Date;
-  modalCopyType:NudgeCopyType;
   openCounterIndex: number = 0;
 
   constructor(
@@ -72,7 +70,7 @@ export class DataDisplayComponent implements OnInit {
   }
 
   getTextFieldText(tracker:NudgeTracker) {
-    return tracker.user.logs.length > 0 ? tracker.user.logs[0].response : null;
+    return tracker.user.logs.length > 0 ? tracker.user.logs[0].response : '';
   }
 
   getCounterTargetQuantity(tracker:NudgeTracker):number {
@@ -176,7 +174,6 @@ export class DataDisplayComponent implements OnInit {
   openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker, isCopyFrom:boolean) {
     this.modalTracker = tracker;
     this.modalDate = this.calendarService.currentDate;
-    this.modalCopyType = isCopyFrom ? NudgeCopyType.From : NudgeCopyType.To;
     this.modalRef = this.modalService.show(template, { animated: true, keyboard: false, backdrop: 'static' });
   }
 

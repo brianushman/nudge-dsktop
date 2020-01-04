@@ -124,6 +124,14 @@ export class NudgeApiService {
         return this.trackerData.get(this.getDateFormat(date));
     }
 
+    public TrackerDataByDateAndId(date:Date, id:number):NudgeTracker {
+        let trackers = this.TrackerDataByDate(date);
+        for(let i = 0; i < trackers.length; ++i) {
+            if(trackers[i].id == id) return trackers[i];
+        }
+        return null;
+    }
+
     public createTrackerCounter(tracker:NudgeTracker, quantity:number, date:Date = null):Observable<NudgeUserDataLog> {
         var timestamp = (date != null) ? moment(date) : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()

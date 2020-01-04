@@ -4,7 +4,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { NudgeApiService } from '../services/NudgeApiService';
 import { BsDatepickerDirective, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
-import { NudgeCopyType } from '../models/NudgeCopyType';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
@@ -16,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 export class CopyEntryComponent implements OnInit {
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker: BsDatepickerDirective;
 
-  @Input() CopyType:NudgeCopyType;
   @Input() EntryDate:Date;
   @Input() Entry:NudgeTracker;
   @Input() CounterTypes:NudgeTracker[];
@@ -38,16 +36,9 @@ export class CopyEntryComponent implements OnInit {
     private toastr: ToastrService) {
     }
 
-  ngOnInit() {        
+  ngOnInit() {
     this.copyEntry = this.Entry;
-    this.quantities = this.getMeal(this.Entry.user.logs[0].response);
-
-    this.disabledDates = [
-      moment(this.EntryDate).toDate()
-    ];
-
-    this.EntryDate = (this.CopyType == NudgeCopyType.From) ? 
-        this.getStartingCopyFromDate() : this.getStartingCopyToDate();
+    this.EntryDate = this.getCopyToDate();
     
     this.bsConfig = Object.assign({}, { 
       containerClass: 'theme-dark-blue',
@@ -55,6 +46,11 @@ export class CopyEntryComponent implements OnInit {
       showWeekNumbers:false,
       selectFromOtherMonth: true
     });
+
+    this.quantities = this.getMeal(this.Entry.user.logs[0].response);
+    this.disabledDates = [
+      moment(this.EntryDate).toDate()
+    ];
   }
 
   formatDate(date:Date, format:string):string {
@@ -75,7 +71,7 @@ export class CopyEntryComponent implements OnInit {
   }
 
   getMealText():string {
-    if(this.Entry.user.logs.length == 0) return null;
+    if(this.Entry.user.logs.length == 0) return '';
     return this.Entry.user.logs[0].response;
   }
 
@@ -94,7 +90,7 @@ export class CopyEntryComponent implements OnInit {
       return;
     }
 
-    this.saveMeal(this.Entry.user.logs[0].response, this.quantities);
+    this.updateMealCacheValues(this.getMealText(), this.quantities);
     this.copyMeal();
   }
 
@@ -109,9 +105,17 @@ export class CopyEntryComponent implements OnInit {
 
   copyMeal() {
     this.refCount = this.quantities.keys.length + 1;
-    this.nudgeApiService.updateTrackerQuestion(this.copyEntry, this.Entry.user.logs[0].response, this.EntryDate).subscribe(x => this.popRef());
+    this.nudgeApiService.updateTrackerQuestion(this.copyEntry, this.Entry.user.logs[0].response, this.EntryDate).subscribe(x => {
+      let tracker = this.nudgeApiService.TrackerDataByDateAndId(this.EntryDate, this.Entry.id)
+      this.popRef();
+      tracker.user.logs.splice(0, 1, x);
+    });
     this.quantities.forEach((value: number, key: number) => {
-      if(value > 0) this.nudgeApiService.createTrackerCounter(this.getTrackerById(key), value, this.EntryDate).subscribe(x => this.popRef());
+      if(value > 0) this.nudgeApiService.createTrackerCounter(this.getTrackerById(key), value, this.EntryDate).subscribe(x => {
+        let tracker = this.nudgeApiService.TrackerDataByDateAndId(this.EntryDate, key);
+        this.popRef();
+        tracker.user.logs.push(x);
+      });
       else this.popRef();
     });
   }
@@ -123,23 +127,19 @@ export class CopyEntryComponent implements OnInit {
     return null;
   }
 
-  getMeal(value:string):Map<number,number> {
+  private getMeal(value:string):Map<number,number> {
     let cookieString = this.cookieService.get(this.cookieName);
     if(cookieString == "") {
-      let map = new Map<number,number>();
-      this.CounterTypes.forEach(counter => {
-        map.set(counter.id, 0);
-      });
-      return map;
+      return this.buildEmptyMealTemplate();
     }
     let cookieValue:Map<string,string> = new Map(JSON.parse(cookieString));
     
     let mealString = cookieValue.get(value);
-    if(mealString == null || mealString == "") return null;
+    if(mealString == null || mealString == "") return this.buildEmptyMealTemplate();
     return new Map<number,number>(JSON.parse(mealString));
   }
 
-  saveMeal(mealName:string, value: Map<number,number>) {
+  private updateMealCacheValues(mealName:string, value: Map<number,number>) {
     let cookieString = this.cookieService.get(this.cookieName);
     let cookieValue:Map<string,string> = (cookieString == "") ? new Map() : new Map(JSON.parse(cookieString));
 
@@ -147,7 +147,15 @@ export class CopyEntryComponent implements OnInit {
     this.setCookie(this.cookieName, JSON.stringify(Array.from(cookieValue.entries())));
   }
 
-  setCookie(name:string, value:string):void {
+  private buildEmptyMealTemplate():Map<number,number> {
+    let map = new Map<number,number>();
+    this.CounterTypes.forEach(counter => {
+      map.set(counter.id, 0);
+    });
+    return map;
+  }
+
+  private setCookie(name:string, value:string):void {
     if(!environment.production) {
       this.cookieService.set(name, value, 100000, "/", 'localhost', false, "Lax");
     }
@@ -163,12 +171,7 @@ export class CopyEntryComponent implements OnInit {
     }
   }
 
-  private getStartingCopyFromDate():Date {
-    if(moment().format('YYYYMMDD') == moment(this.EntryDate).format('YYYYMMDD')) return moment().subtract(1, 'days').toDate();
-    else return moment().toDate();
-  }
-
-  private getStartingCopyToDate():Date {
+  private getCopyToDate():Date {
     if(moment().format('YYYYMMDD') == moment(this.EntryDate).format('YYYYMMDD')) return moment().add(1, 'days').toDate();
     else return moment().toDate();
   }

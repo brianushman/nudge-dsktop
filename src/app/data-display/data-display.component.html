@@ -31,14 +31,19 @@
                 <button dropdownToggle type="button" tabindex="-1" class="btn dropdown-toggle copy-question">
                     <i class="fas fa-share-square"></i>
                 </button>
-                <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
-                    <li role="menuitem">
-                        <a class="dropdown-item" href="#" (click)="openCopyModal(template, tracker)">Quick Copy</a>
-                    </li>
+                <ul id="drp-down-menu" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
                     <li role="menuitem" [class.disabled]="getTextFieldText(tracker).length == 0" [title]="getCopyToToolTipText(tracker)">
-                        <a class="dropdown-item" href="#" [class.disabled]="getTextFieldText(tracker).length == 0" (click)="openCopyModal(template, tracker, false)">Copy To Date</a>
+                        <a class="dropdown-item" href="#" [class.disabled]="getTextFieldText(tracker).length == 0" (click)="openCopyModal(template, tracker)">Copy To Date</a>
                     </li>
-                </ul >
+                    <li role="menuitem" dropdown triggers="mouseover" placement="right" container="#drp-down-menu">
+                        <a dropdownToggle tabindex="-1" class="dropdown-item dropdown-toggle" href="#" (click)="false">Quick Copy <span class="caret"></span></a>
+                        <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
+                            <li role="menuitem">
+                                <a class="dropdown-item" href="#" (click)="alert('cliked first item')">First Item</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </label>
         <textarea autosize minRows="1" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>

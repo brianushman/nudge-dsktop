@@ -210,6 +210,9 @@ ngx-bootstrap/timepicker
 
 ngx-bootstrap/utils
 
+ngx-checkbox
+MIT
+
 ngx-cookie-service
 MIT
 MIT License

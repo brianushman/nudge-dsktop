@@ -156,7 +156,7 @@ export class NudgeApiService {
             let cookieValue = this.cookieService.get(this.quickCopyCookieName);
             let map:Map<string,string> = cookieValue.length > 0 ? new Map(JSON.parse(cookieValue)) : new Map();
             map.set(quickCopyName, mealName);
-            this.setCookie(this.quickCopyCookieName, JSON.stringify(map));
+            this.setCookie(this.quickCopyCookieName, JSON.stringify(Array.from(map.entries())));
         }
 
         if(this.cookieService.get(this.quickCopyCookieName).length == 0) return [];
@@ -169,16 +169,19 @@ export class NudgeApiService {
         let mealCache:Map<string, string> = new Map<string, string>(JSON.parse(this.cookieService.get('nudgedsktop-copymeal-cache')));
 
         if(quickCopyCache.get(quickCopyId) == null || quickCopyCache.get(quickCopyId).length == 0) return false;
-        let mealId:string = quickCopyCache.get(quickCopyId);
+        let mealName:string = quickCopyCache.get(quickCopyId);
 
-        let mealName = mealCache.get(mealId);
-        if(mealName == null || mealName.length == 0) return false;
-        let counterValues = new Map<number,number>(JSON.parse(mealName));
+        let counterValueString = mealCache.get(mealName);
+        if(counterValueString == null || counterValueString.length == 0) return false;
+        let counterValues = new Map<number,number>(JSON.parse(counterValueString));
 
         let questionTracker = this.TrackerDataByDateAndId(date, id);
         if(questionTracker == null) return false;
-        this.updateTrackerQuestion(questionTracker, mealName, date).subscribe(x => questionTracker.user.logs.splice(0, 1, x));
-        counterValues.forEach((id:number, value:number) => {
+        this.updateTrackerQuestion(questionTracker, mealName, date).subscribe(x => {
+            questionTracker.user.logs.splice(0, 1, x);
+        });
+        counterValues.forEach((value:number, id:number) => {
+            if(value == 0) return;
             let tracker = this.TrackerDataByDateAndId(date, id);
             this.createTrackerCounter(tracker, value, date).subscribe(x => tracker.user.logs.push(x));
         });

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, TemplateRef  } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, TemplateRef, ElementRef  } from '@angular/core';
 import { NudgeApiService } from '../services/NudgeApiService';
 import { NudgeTracker, NudgeUserDataLog } from '../models/NudgeTracker';
 import { CalendarService } from '../calendar/calendar.service';
@@ -171,7 +171,7 @@ export class DataDisplayComponent implements OnInit {
           trackerName.toUpperCase().indexOf("EVENING") >= 0;
   }
 
-  openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker, isCopyFrom:boolean) {
+  openCopyModal(template: TemplateRef<any>, tracker:NudgeTracker) {
     this.modalTracker = tracker;
     this.modalDate = this.calendarService.currentDate;
     this.modalRef = this.modalService.show(template, { animated: true, keyboard: false, backdrop: 'static' });
@@ -198,5 +198,15 @@ export class DataDisplayComponent implements OnInit {
 
   getQuickCopyMealNames():string[] {
     return this.nudgeApiService.QuickCopyMeals();
+  }
+
+  populateQuickCopyMeal(quickCopyMeal:string, trackerId:number) {
+    this.nudgeApiService.QuickCopyNewMeal(quickCopyMeal, this.calendarService.currentDate, trackerId);
+  }
+
+  selectAllText(ctrl:any) {
+    if(ctrl.keyCode == 65 && ctrl.ctrlKey) {
+      ctrl.target.select();
+    }
   }
 }

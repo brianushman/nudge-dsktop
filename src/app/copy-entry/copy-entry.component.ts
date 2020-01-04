@@ -87,11 +87,17 @@ export class CopyEntryComponent implements OnInit {
 
   submit() {
     if(this.getMealText() == null || this.getMealText().length == 0) {
-      this.toastr.error('The meal on your chosen date does not have an entry. Choose a new date at the top of this dialog box.', 'Error');
+      this.toastr.warning('The meal on your chosen date does not have an entry. Choose a new date at the top of this dialog box.', 'Error');
+      return;
+    }
+
+    if(this.quickCopyEnabled && (this.quickCopyMealName == null || this.quickCopyMealName.length == 0)) {
+      this.toastr.warning('If Add To Quick Copy is Enabled, a name must be chosen.');
       return;
     }
 
     this.updateMealCacheValues(this.getMealText(), this.quantities);
+    if(this.quickCopyEnabled) this.nudgeApiService.QuickCopyMeals(this.quickCopyMealName, this.getMealText());
     this.copyMeal();
   }
 

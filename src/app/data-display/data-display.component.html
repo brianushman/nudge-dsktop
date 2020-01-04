@@ -39,14 +39,14 @@
                         <a dropdownToggle tabindex="-1" class="dropdown-item dropdown-toggle" href="#" (click)="false" [class.disabled]="getQuickCopyMealNames().length == 0">Quick Copy <span class="caret"></span></a>
                         <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated" [hidden]="getQuickCopyMealNames().length == 0">
                             <li role="menuitem" *ngFor="let meal of getQuickCopyMealNames()">
-                                <a class="dropdown-item" href="#" (click)="alert('cliked first item')">{{meal}}</a>
+                                <a class="dropdown-item" href="#" (click)="populateQuickCopyMeal(meal, tracker.id)">{{meal}}</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </label>
-        <textarea autosize minRows="1" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)">{{getTextFieldText(tracker)}}</textarea>
+        <textarea autosize minRows="1" placeholder="no text entered yet..." (focusout)="updateTextField(tracker, $event.target.value)" (keydown)="selectAllText($event)">{{getTextFieldText(tracker)}}</textarea>
     </div>
 </div>
 

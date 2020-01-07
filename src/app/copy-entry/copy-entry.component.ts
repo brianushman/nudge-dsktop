@@ -113,7 +113,7 @@ export class CopyEntryComponent implements OnInit {
   copyMeal() {
     this.refCount = this.quantities.keys.length + 1;
     this.nudgeApiService.updateTrackerQuestion(this.copyEntry, this.Entry.user.logs[0].response, this.EntryDate).subscribe(x => {
-      let tracker = this.nudgeApiService.TrackerDataByDateAndId(this.EntryDate, this.Entry.id)
+      let tracker = this.nudgeApiService.TrackerDataByDateAndId(this.EntryDate, this.copyEntry.id)
       this.popRef();
       tracker.user.logs.splice(0, 1, x);
     });

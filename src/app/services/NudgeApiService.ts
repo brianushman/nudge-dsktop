@@ -127,7 +127,7 @@ export class NudgeApiService {
       }
 
     public serviceInitialized():boolean {
-        return this.userInfo != null;// && Array.from(this.trackerData.keys()).length > 0;
+        return this.userInfo != null;
     }
 
     public UserInfo():INudgeUserInfo {

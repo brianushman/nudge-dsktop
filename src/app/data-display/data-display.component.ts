@@ -21,6 +21,7 @@ export class DataDisplayComponent implements OnInit {
   modalTracker: NudgeTracker;
   modalDate:Date;
   openCounterIndex: number = 0;
+  inTransition:boolean = false;
 
   constructor(
     private nudgeApiService:NudgeApiService,
@@ -100,16 +101,33 @@ export class DataDisplayComponent implements OnInit {
   }
 
   createLogEntry(tracker:NudgeTracker, quantity:number, htmlElement:any) {
+    if(this.inTransition) return;
+    this.inTransition = true;
     if(quantity == null || quantity <= 0) {
       this.openCounterIndex++;
       setTimeout(() => {
         this.quantityFields.toArray()[this.openCounterIndex].focus();
+        this.inTransition = false;
       }, 200);
     }
+    else {
+      this.nudgeApiService.createTrackerCounter(tracker, quantity).subscribe(data => {
+        tracker.user.logs.push(data);
+        htmlElement.value = '';
+        this.openCounterIndex++;
+        setTimeout(() => {
+          this.quantityFields.toArray()[this.openCounterIndex].focus();
+          this.inTransition = false;
+        }, 200);
+      });
+    }
+  }
+
+  createLogEntryQuantity(tracker:NudgeTracker, quantity:number, htmlElement:any) {
+    if(quantity == null || quantity <= 0) return;
     this.nudgeApiService.createTrackerCounter(tracker, quantity).subscribe(data => {
       tracker.user.logs.push(data);
       htmlElement.value = '';
-      this.openCounterIndex++;
       setTimeout(() => {
         this.quantityFields.toArray()[this.openCounterIndex].focus();
       }, 200);

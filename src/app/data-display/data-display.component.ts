@@ -17,6 +17,7 @@ export class DataDisplayComponent implements OnInit {
 
   readonly questionType: string = 'questions-log';
   readonly counterType: string = 'counters-log';
+  modalMealText:string;
   modalRef: BsModalRef;
   modalTracker: NudgeTracker;
   modalDate:Date;
@@ -226,5 +227,19 @@ export class DataDisplayComponent implements OnInit {
     if(ctrl.keyCode == 65 && ctrl.ctrlKey) {
       ctrl.target.select();
     }
+  }
+
+  openDeleteQuickCopy(template:TemplateRef<any>, meal:string) {
+    this.modalMealText = meal;
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  confirm(): void {
+    this.modalRef.hide();
+    this.nudgeApiService.DeleteQuickCopyMeal(this.modalMealText);
+  }
+ 
+  decline(): void {
+    this.modalRef.hide();
   }
 }

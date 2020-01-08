@@ -38,8 +38,9 @@
                     <li role="menuitem" dropdown triggers="mouseover" placement="right" container="#drp-down-menu" [class.disabled]="getQuickCopyMealNames().length == 0">
                         <a dropdownToggle tabindex="-1" class="dropdown-item dropdown-toggle" href="#" (click)="false" [class.disabled]="getQuickCopyMealNames().length == 0">Quick Copy <span class="caret"></span></a>
                         <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated" [hidden]="getQuickCopyMealNames().length == 0">
-                            <li role="menuitem" *ngFor="let meal of getQuickCopyMealNames()">
+                            <li role="menuitem" *ngFor="let meal of getQuickCopyMealNames()" style="display: flex">
                                 <a class="dropdown-item" href="#" (click)="populateQuickCopyMeal(meal, tracker.id)">{{meal}}</a>
+                                <i class="fa fa-trash" (click)="openDeleteQuickCopy(confirmDlg, meal)" title="Delete Quick Copy Item" style="margin-right: 16px"></i>
                             </li>
                         </ul>
                     </li>
@@ -53,3 +54,15 @@
 <ng-template #template>
     <app-copy-entry [Entry]="modalTracker" [EntryDate]="modalDate" [CounterTypes]="getOrderedCounters()" [QuestionTypes]="getOrderedCopyableTextFields()" (onCancel)="closeCopyModal()" (onSave)="saveCopyModal($event)"></app-copy-entry>
 </ng-template>
+
+<ng-template #confirmDlg>
+    <div class="modal-body text-center">
+      <h6>
+        Are you sure you want to delete this Quick Copy meal?
+        <br />
+        <b><u>{{modalMealText}}</u></b>
+      </h6>
+      <button type="button" class="btn btn-default" (click)="confirm()" style="background-color: buttonface;">Yes</button>
+      <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+    </div>
+  </ng-template>

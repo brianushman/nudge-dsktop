@@ -188,6 +188,17 @@ export class NudgeApiService {
         return true;
     }
 
+    public DeleteQuickCopyMeal(mealName:string) {
+        if(mealName == null || mealName.length == 0) return;
+        
+        let cookieValue = this.cookieService.get(this.quickCopyCookieName);
+        if(cookieValue.length == 0) return;
+
+        let map:Map<string,string> = new Map(JSON.parse(cookieValue));
+        map.delete(mealName);
+        this.setCookie(this.quickCopyCookieName, JSON.stringify(Array.from(map.entries())));
+    }
+
     public createTrackerCounter(tracker:NudgeTracker, quantity:number, date:Date = null):Observable<NudgeUserDataLog> {
         var timestamp = (date != null) ? moment(date) : moment(moment(this.calendarService.currentDate).format('YYYY-MM-DD ') + moment().format('HH:mm:ss'));
         const headers = new HttpHeaders()

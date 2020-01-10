@@ -36,6 +36,8 @@ export class NudgeApiService {
     }
 
     public Initialize():void {
+        if(this.apiKey.length == 0 || this.apiToken.length == 0) return;
+        
         this.calendarService.date.subscribe(newDate => {
             if(!this.serviceInitialized()) return;
             var dateStr = this.getDateFormat(newDate);

@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
   }
 
   isLoggedIn():boolean {
-    return null != this.cookieService.get('nudge-api-key');
+    return this.cookieService.get('nudge-api-key').length > 0;
   }
 
   getUserName():string {
